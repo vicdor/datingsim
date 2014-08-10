@@ -5,19 +5,13 @@ def loc_the_park():
     (1)Play on the swings
     (2)Peer into the trash can""")
 
-    working_set = range(1,3)
-    raw = input()
-    while(int(raw) not in working_set):
-        print('?')
-        raw = input()
+    n = range_input(2)
 
-    raw = int(raw)
-
-    if (raw == 1):
+    if (n == 1):
         input("Yayyyyy!")
         input("Whoppeee!")
         return
-    if (raw == 2):
+    if (n == 2):
         input("The trash can smells a little strange.")
         input("You are reminded of the city of Berkeley before "
                 "you suddenly become very sleepy...")
@@ -33,22 +27,16 @@ def loc_your_house():
     (1)Exit through the back door
     (2)Check on the front door to see who's there""")
 
-    working_set = range(1,3)
-    raw = input()
-    while(int(raw) not in working_set):
-        print('?')
-        raw = input()
-    
-    raw = int(raw)
+    n = range_input(2)
 
-    if (raw == 1):
+    if (n == 1):
         input("""Wearing your favorite diamond mocassins, you slip through
         the backdoor with grace and finesse.""")
-        input("You have arrived at the park")
+        input("You are now at the park.")
         global location
         location = loc_the_park
         return
-    elif (raw == 2):
+    elif (n == 2):
         input("You tiptoe to the door. Neglecting to peer through the "
                 "peephole, you\n unwisely swing open the hinges.")
         input("FAAACK! It's Proto Krippendorf!")
@@ -64,18 +52,12 @@ def loc_dont_know():
     (1) Exit the game
     (2) Return to the park""")
 
-    working_set = range(1,3)
-    raw = input()
-    while(int(raw) not in working_set):
-        print('?')
-        raw = input()
+    n = range_input(2)
 
-    raw = int(raw)
-
-    if (raw == 1):
+    if (n == 1):
         global location
         location = util_exit
-    elif (raw == 2):
+    elif (n == 2):
         print("It seems that you cannot leave this wonderful place.")
         input("Your willpower is lacking.")
         return
@@ -88,22 +70,16 @@ def boy_proto_krippendorf():
     (2) Genghis Khan
     (3) Abscond""")
     
-    working_set = range(1,4)
-    raw = input()
-    while (int(raw) not in working_set):
-        print('?')
-        raw = input()
+    n = range_input(3)
 
-    raw = int(raw)
-
-    if (raw == 1):
+    if (n == 1):
         input("Proto Krippendorf blushes.")
         input("You blush daintily.")
-    elif raw == 2:
+    elif n == 2:
         input("Proto Krippendorf glares at you")
         input("He is clearly bored, and you have clearly failed to entertain "
-                "him")
-    elif raw == 3:
+                "him.")
+    elif n == 3:
         input("You make a mad dash for your house.")
         input("You have successfully absconded from Proto Krippendorf.")
         global location
@@ -118,6 +94,24 @@ def util_exit():
     print("Thank you for playing Shitty Dating Sim.")
     quit()
 
+#Input Utilities
+def range_input(a, b=None):
+    if (b == None):
+        r = range(1, a+1)
+    else:
+        r = range(a, b)
+
+    complete = False
+    while not complete:
+        try:
+            n = int(input('==> '))
+            if n in r:
+                complete = True
+            else:
+                print("invalid integer")
+        except ValueError:
+            input("invalid input, please enter an integer")
+    return n
 
 #begin here
 def main():
