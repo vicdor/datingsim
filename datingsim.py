@@ -73,10 +73,8 @@ def loc_dont_know():
     raw = int(raw)
 
     if (raw == 1):
-        print("")
-        print("Thank you for playing Shitty Dating Sim.")
-        print("Have a shitty day!")
-        quit()
+        global location
+        location = util_exit
     elif (raw == 2):
         print("It seems that you cannot leave this wonderful place.")
         input("Your willpower is lacking.")
@@ -114,6 +112,12 @@ def boy_proto_krippendorf():
     else:
         input("lol wat? at boy_proto_krippendorf")
 
+#Utility Locations
+def util_exit():
+    print()
+    print("Thank you for playing Shitty Dating Sim.")
+    quit()
+
 
 #begin here
 def main():
@@ -124,7 +128,6 @@ def main():
         print("current location is {}".format(location))
         location()
 
-    #TODO: move quit mechanism to main
 
 
 if (__name__ == '__main__'):
