@@ -1,4 +1,4 @@
-datingsim
+Shity Dating Sim
 =========
 
 Please excuse all the swearing. The obscenities are incorporated into the text to symbolize the darkness of modern
