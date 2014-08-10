@@ -11,7 +11,7 @@ def loc_the_park():
         input("Yayyyyy!")
         input("Whoppeee!")
         return
-    if (n == 2):
+    elif (n == 2):
         input("The trash can smells a little strange.")
         input("You are reminded of the city of Berkeley before "
                 "you suddenly become very sleepy...")
@@ -110,7 +110,7 @@ def range_input(a, b=None):
             else:
                 print("invalid integer")
         except ValueError:
-            input("invalid input, please enter an integer")
+            print("invalid input, please enter an integer")
     return n
 
 #begin here
