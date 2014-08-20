@@ -3,7 +3,7 @@ import pickle
 # Default path to save and access game data
 DEFAULT_PATH = ".datingsimsave"
 
-class SaveData():
+class Save():
     """
     An instance of this class will be used to hold all datingsim save data
     in picklable format. It's important to note that locational functions will
@@ -46,7 +46,7 @@ if __name__ == '__main__':
     print("Test save to be written to {p}".format(p=path))
     test_string = input("Please input test string to be stored: ")
 
-    data = SaveData()
+    data = Save()
     data.dict['test'] = test_string
     data.BURN_BABY_BURN(path)
 
