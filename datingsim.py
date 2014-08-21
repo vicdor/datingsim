@@ -1,25 +1,3 @@
-# Locations
-def loc_the_park():
-    input("Welcome to the fucking park.")
-    print("""What will you do?
-    (1)Play on the swings
-    (2)Peer into the trash can""")
-
-    n = range_input(2)
-
-    if (n == 1):
-        input("Yayyyyy!")
-        input("Whoppeee!")
-        return
-    elif (n == 2):
-        input("The trash can smells a little strange.")
-        input("You are reminded of the city of Berkeley before "
-                "you suddenly become very sleepy...")
-        global location
-        location = loc_dont_know
-        return
-
-
 def loc_your_house():
     input("You are ensconced within your middle class home.")
     input("Suddenly, a ringing from the doorbell.")
@@ -43,6 +21,29 @@ def loc_your_house():
         global location
         location = boy_proto_krippendorf
         return
+
+
+# Locations
+def loc_the_park():
+    input("Welcome to the fucking park.")
+    print("""What will you do?
+    (1)Play on the swings
+    (2)Peer into the trash can""")
+
+    n = range_input(2)
+
+    if (n == 1):
+        input("Yayyyyy!")
+        input("Whoppeee!")
+        return
+    elif (n == 2):
+        input("The trash can smells a little strange.")
+        input("You are reminded of the city of Berkeley before "
+                "you suddenly become very sleepy...")
+        global location
+        location = loc_dont_know
+        return
+
 
 def loc_dont_know():
     input("""You don't know where you are, but this place seems nice enough
