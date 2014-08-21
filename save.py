@@ -13,6 +13,23 @@ class Save():
     def __init__(self):
         self.dict = {}  # dict will probably be private later with access fns
     
+    
+    @staticmethod
+    def makeFromPickle(path=DEFAULT_PATH, debug=False):
+       """
+       Reads a pickled Save from DEFAULT_PATH, or from optionally provided
+       path.
+       If pickle cannot be loaded, prints an error if debugging, and then returns None.
+       """
+       save = None
+       try:
+          save = _read_pickle(DEFAULT_PATH)
+       except Exception as e:
+           if debug:
+               print(e)
+       
+       return save
+
 
     def BURN_BABY_BURN(self, path=DEFAULT_PATH):
         """
@@ -50,7 +67,7 @@ if __name__ == '__main__':
     data.dict['test'] = test_string
     data.BURN_BABY_BURN(path)
 
-    loadedData = _read_pickle(path)
+    loadedData = Save.makeFromPickle()
     print("Loaded {obj} from {p}".format(p=path, obj=loadedData))
     print("Dictionary data follows: " + str(data.dict))
 
