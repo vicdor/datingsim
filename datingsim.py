@@ -68,9 +68,11 @@ def boy_proto_krippendorf():
     print("""You approach Proto Krippendorf. What will you do?
     (1) Discuss proto-pre-algebra
     (2) Genghis Khan
-    (3) Abscond""")
+    (3) Abscond
+    (4) Beseech him to save you""")
     
-    n = range_input(3)
+    
+    n = range_input(4)
 
     if (n == 1):
         input("Proto Krippendorf blushes.")
@@ -85,6 +87,19 @@ def boy_proto_krippendorf():
         global location
         location = loc_your_house
         return
+    elif n == 4:
+        input("Krippendorf furrows his brow in concentration as he works on" \
+                " granting your potentially troublesome request.")
+        print("---BEGIN SAVE ATTEMPT---")
+
+        from save import Save
+        save = Save()
+        data = {"location":boy_proto_krippendorf, "starting_msg": "test msg successfully loaded!"}
+        save.dict["v0.1"] = data
+        print("* save object generated: {}".format(str(data)))
+        
+        save.BURN_BABY_BURN()
+        print("* save object successfully pickled.")
     else:
         input("lol wat? at boy_proto_krippendorf")
 
@@ -115,12 +130,28 @@ def range_input(a, b=None):
 
 #begin here
 def main():
+    # first check for existence of save
+    from save import Save
+    s = Save.makeFromPickle()
+    if not s:
+        game_loop()
+    else:
+        # restore existing save
+        # v 0.1 save is stored as a dict in s["v0.1"]
+        #    location: pointer to function of save location
+        #    starting_msg: print before restoring to location
+        data = s.dict["v0.1"]
+        print(data["starting_msg"])
+        game_loop(data["location"])
+        
+def game_loop(initial_loc=loc_your_house):
     global location
-    location = loc_your_house
+    location = initial_loc
 
     while(location != 'quit'):
         print("current location is {}".format(location))
         location()
+
 
 
 
