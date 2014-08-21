@@ -6,19 +6,18 @@ def loc_your_house():
     (2)Check on the front door to see who's there""")
 
     n = range_input(2)
+    global location
 
     if (n == 1):
         input("""Wearing your favorite diamond mocassins, you slip through
         the backdoor with grace and finesse.""")
         input("You are now at the park.")
-        global location
         location = loc_the_park
         return
     elif (n == 2):
         input("You tiptoe to the door. Neglecting to peer through the "
                 "peephole, you\n unwisely swing open the hinges.")
         input("FAAACK! It's Proto Krippendorf!")
-        global location
         location = boy_proto_krippendorf
         return
 
