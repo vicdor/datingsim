@@ -43,6 +43,9 @@ class Save():
 
 
 def _write_pickle(obj, path):
+    """
+    writes pickle to path
+    """
     f = open(path, 'wb')
     pickle.dump(obj, f)
     f.close()
