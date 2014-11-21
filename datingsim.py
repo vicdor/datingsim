@@ -6,20 +6,17 @@ def loc_your_house():
     (2)Check on the front door to see who's there""")
 
     n = range_input(2)
-    global location
 
     if (n == 1):
         input("""Wearing your favorite diamond mocassins, you slip through
         the backdoor with grace and finesse.""")
         input("You are now at the park.")
-        location = loc_the_park
-        return
+        return loc_the_park
     elif (n == 2):
         input("You tiptoe to the door. Neglecting to peer through the "
                 "peephole, you\n unwisely swing open the hinges.")
         input("FAAACK! It's Proto Krippendorf!")
-        location = boy_proto_krippendorf
-        return
+        return boy_proto_krippendorf
 
 
 # Locations
@@ -39,9 +36,7 @@ def loc_the_park():
         input("The trash can smells a little strange.")
         input("You are reminded of the city of Berkeley before "
                 "you suddenly become very sleepy...")
-        global location
-        location = loc_dont_know
-        return
+        return loc_dont_know
 
 
 def loc_dont_know():
@@ -55,8 +50,7 @@ def loc_dont_know():
     n = range_input(2)
 
     if (n == 1):
-        global location
-        location = util_exit
+        return util_exit
     elif (n == 2):
         print("It seems that you cannot leave this wonderful place.")
         input("Your willpower is lacking.")
@@ -84,9 +78,7 @@ def boy_proto_krippendorf():
     elif n == 3:
         input("You make a mad dash for your house.")
         input("You have successfully absconded from Proto Krippendorf.")
-        global location
-        location = loc_your_house
-        return
+        return loc_your_house
     elif n == 4:
         input("Krippendorf furrows his brow in concentration as he works on" \
                 " granting your potentially troublesome request.")
@@ -145,12 +137,13 @@ def main():
         game_loop(data["location"])
         
 def game_loop(initial_loc=loc_your_house):
-    global location
-    location = initial_loc
-
+    prev_loc = location = initial_loc
     while(location != 'quit'):
         print("current location is {}".format(location))
-        location()
+        location = location()
+        if location == None:
+            location = prev_loc
+
 
 
 
