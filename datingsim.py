@@ -143,6 +143,8 @@ def game_loop(initial_loc=loc_your_house):
         location = location()
         if location == None:
             location = prev_loc
+        else:
+            prev_loc = location
 
 
 
