@@ -25,7 +25,7 @@ class Dialogue(object):
     def peek(self):
         """Returns the next chunk to displayed (a string). Internally, the Dialogue object
         acts as if this chunk has not been accessed yet."""
-        return self.chunk[self.position]
+        return self.chunks[self.position]
 
     def has_more(self):
         """Returns whether more chunks of text remain."""
