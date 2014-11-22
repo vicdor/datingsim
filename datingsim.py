@@ -42,7 +42,7 @@ class Choice(object):
         @param desc: a one-line string desc of this choice
         @param post_desc: a string or a list of strings that are displayed in order
         after the player decides on this Choice and before callback is called
-        @param followup: the function that is returned upon the user deciding this choice
+        @param followup: the value that is returned when the user chooses this choice
 
         >>> c = Choice('hello', 10, None) #doctest: +ELLIPSIS
         Traceback (most recent call last):
