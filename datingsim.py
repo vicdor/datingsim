@@ -80,6 +80,13 @@ class Choice(object):
             input(line)
         return self.followup
 
+class Place(object):
+    """A Place is somewhere that the player can visit, and which leads to another Place."""
+    def __init__(self):
+        pass
+    def next(self):
+        """Returns the next place to be visited."""
+
 def loc_your_house():
     input("You are ensconced within your middle class home.")
     input("Suddenly, a ringing from the doorbell.")
@@ -89,28 +96,10 @@ def loc_your_house():
     c2 = Choice("Check on the front door to see who's there",
             ["You tiptoe to the door.",
                 "Neglecting to peer through the peephole, you unwisely swing open the hinges.",
-                "FAAAAAAAAACK! It's Proto Krippendorf!"],
-            boy_proto_krippendorf)
+                "FAAAAAAAAACK! It's Proto Krippendorf!"], boy_proto_krippendorf)
     r = RangeDecision([c1, c2])
     r.add(c2)
-    r.make()
-
-    print("""What will you do?
-    (1)Exit through the back door
-    (2)Check on the front door to see who's there""")
-
-    n = range_input(2)
-    if (n == 1):
-        input("""Wearing your favorite diamond mocassins, you slip through
-        the backdoor with grace and finesse.""")
-        input("You are now at the park.")
-        return loc_the_park
-    elif (n == 2):
-        input("You tiptoe to the door. Neglecting to peer through the "
-                "peephole, you\n unwisely swing open the hinges.")
-        input("FAAACK! It's Proto Krippendorf!")
-        return boy_proto_krippendorf
-
+    return r.make()
 
 # Locations
 def loc_the_park():
@@ -249,10 +238,6 @@ def game_loop(initial_loc=loc_your_house):
             location = prev_loc
         else:
             prev_loc = location
-
-
-
-
 
 if (__name__ == '__main__'):
     main()
