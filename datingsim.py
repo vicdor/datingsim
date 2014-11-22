@@ -19,7 +19,7 @@ class RangeDecision(Decision):
         Decision.__init__(self, choices)
         self.decision_prompt = decision_prompt or "What will you do?"
     def make(self):
-        print(decision_prompt)
+        print(self.decision_prompt)
         for i, choice in enumerate(self.choices):
             print("({num}) {desc}".format(num=i+1, desc=choice))
         n = range_input(len(self.choices)) - 1
@@ -82,10 +82,58 @@ class Choice(object):
 
 class Place(object):
     """A Place is somewhere that the player can visit, and which leads to another Place."""
-    def __init__(self):
-        pass
-    def next(self):
-        """Returns the next place to be visited."""
+    def __init__(self, visit_desc, exit):
+        """@param visit_desc: a string or a list of strings that is printed when the player first
+        arrives at this Place.
+        @param exit: either another Place, which is to be returned by self.exit(); a function,
+        which is called by self.exit() to be evaluated into a Place to be returned; or a Decision
+        which is made during a call to self.exit() and whose make() fn returns a Place"""
+
+        if isinstance(visit_desc, str):
+            visit_desc = [visit_desc]
+        self.visit_desc = visit_desc
+
+        if hasattr(exit, '__call__'):  # exit is fn
+            self._exit_is_fn = True
+            self.exit = exit
+        elif isinstance(exit, Decision):
+            self._exit_is_fn = True
+            self.exit = exit.make
+        elif isinstance(exit, Place):
+            self._exit_is_fn = False
+            self._exit = exit
+        else:
+            raise TypeError('{} is invalid exit'.format(exit))
+
+    def visit(self):
+        """Called when player visits this place."""
+        for s in self.visit_desc:
+            input(s)
+
+    def exit(self):
+        """Called when it's time to leave this place. Returns the next place to be visited."""
+        if self._exit_is_fn:
+            return self._exit()
+        else:
+            return self._exit
+
+    @staticmethod
+    def test():
+        visit_desc = ["You are ensconced within your middle class home",
+                "Suddenly, a ringing from the doorbell."]
+        c1 = Choice('Exit through the back door',
+                ['Wearing your favorite diamond mocassins, you slip through the backdoor with grace '
+                    'and finesse.', 'You are now at the park.'], loc_the_park)
+        c2 = Choice("Check on the front door to see who's there",
+                ["You tiptoe to the door.",
+                    "Neglecting to peer through the peephole, you unwisely swing open the hinges.",
+                    "FAAAAAAAAACK! It's Proto Krippendorf!"], boy_proto_krippendorf)
+        r = RangeDecision([c1, c2])
+        your_house = Place(visit_desc, r)
+        your_house.visit()
+        print(your_house.exit())
+        
+
 
 def loc_your_house():
     input("You are ensconced within your middle class home.")
@@ -212,7 +260,7 @@ def limited_input(seq, process_fn=None, input_prompt=None, invalid_prompt=None, 
 
 #begin here
 def main():
-    RangeDecision.test()
+    Place.test()
 
 def load_from_save():
     # first check for existence of save
