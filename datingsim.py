@@ -36,14 +36,12 @@ class RangeDecision(Decision):
         r.make()()
 
 
-#TODO: change callback into something indicative of a not called value that is returned
 class Choice(object):
     """A choice that the player can choose."""
     def __init__(self, desc, post_desc, followup, dialogue_type=SelfPacedDialogue):
         """
         @param desc: a one-line string desc of this choice
         @param post_desc: a Dialogue or a Dialogue argument that is played when this choice is chosen
-        after the player decides on this Choice and before callback is called
         @param followup: the value that is returned when the user chooses this choice
         @param dialogue_type: the dialogue_type that is used to convert non-Dialogue post_desc
         """
@@ -53,8 +51,7 @@ class Choice(object):
     def __str__(self):
         return self.desc
     def choose(self):
-        """Called when this choice is chosen. Prints out post_desc lines and then returns
-        the callback function."""
+        """Called when this choice is chosen. Prints out post_desc lines and then returns followup."""
         self.post_desc.show_all()
         return self.followup
 
