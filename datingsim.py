@@ -3,12 +3,17 @@ from decisions import *
 
 class Place(object):
     """A Place is somewhere that the player can visit, and which leads to another Place."""
-    def __init__(self, visit_desc, exit, dialogue_type=SelfPacedDialogue):
-        """@param visit_desc: a Dialogue or a Dialogue argument
+    def __init__(self, name, visit_desc, exit, dialogue_type=SelfPacedDialogue):
+        """
+        @param name: a brief string description of this place
+        @param visit_desc: a Dialogue or a Dialogue argument that is displayed when Place is visited
         @param exit: either another Place, which is to be returned by self.exit(); a function,
         which is called by self.exit() to be evaluated into a Place to be returned; or a Decision
         which is made during a call to self.exit() and whose make() fn returns a Place
         @param dialogue_type: the type of Dialogue that visit_desc is converted to."""
+        assert isinstance(name, str)
+        self.name = name
+
         if isinstance(visit_desc, Dialogue):
             self.visit_desc = visit_desc
         else:
@@ -38,6 +43,7 @@ class Place(object):
 
     @staticmethod
     def test():
+        name = "your house"
         visit_desc = ["You are ensconced within your middle class home",
                 "Suddenly, a ringing from the doorbell."]
         c1 = Choice('Exit through the back door',
@@ -48,10 +54,58 @@ class Place(object):
                     "Neglecting to peer through the peephole, you unwisely swing open the hinges.",
                     "FAAAAAAAAACK! It's Proto Krippendorf!"], boy_proto_krippendorf)
         r = RangeDecision([c1, c2])
-        your_house = Place(visit_desc, r)
+        your_house = Place(name, visit_desc, r)
         your_house.visit()
         print(your_house.exit())
-        
+
+class Waypoint(Place):
+    """A Waypoint is a specialized Place with many exits."""
+    def __init__(self, name, visit_desc, exits, dialogue_type=SelfPacedDialogue, exit_prompt=None, default_exit_desc=None):
+        """@param exits: a list of exits, or (exits, desc_str) tuples. Exits can 
+        be added later using the add_exit() fn, so it is okay to leave this empty.
+        Warning: if not using tuple form, functions as exits will fail unless default_exit_desc is changed.
+        @param exit_prompt: the prompt shown when the user chooses between exits. Generic default.
+        @param default_exit_desc: the processing fn that is used to make exit choice descriptions 
+        if exits doesn't come in (exit, desc_str) form. By default, just take the Place name attr."""
+        self.exit_prompt = exit_prompt or "Where will you go?"
+        self.default_exit_desc = default_exit_desc or (lambda place: place.name)
+
+        all_tuples = True
+        all_exits = True
+        for e in exits:
+            if isinstance(e, tuple) or isinstance(e, list):
+                assert isinstance(e[1], str)
+                assert isinstance(e[0], Place) or callable(e)
+                all_exits = False
+            else:
+                assert isinstance(e, Place) or callable(e)
+                all_tuples = False
+        assert all_tuples ^ all_exits or len(exits) == 0
+
+        if all_exits:
+            exits = [(p, default_exit_desc(p), "You visit "+default_exit_desc(p)) for p in exits]
+        choices = []
+        for e, desc, post_desc in exits:
+            choices.append(Choice(desc, post_desc, followup=e))
+        self._decision = exit = RangeDecision(choices, self.exit_prompt)
+
+        Place.__init__(self, name, visit_desc, exit)
+            
+    def add_exit(self, exit, desc, post_desc):
+        assert isinstance(exit, Place) or callable(exit)
+        assert isinstance(desc, str)
+        self._decision.add(Choice(desc, post_desc, exit))
+
+    @staticmethod
+    def test():
+        name = "your house"
+        visit_desc = ["You are ensconced within your middle class home",
+                "Suddenly, a ringing from the doorbell."]
+        your_house = Waypoint(name, visit_desc, [])
+        for _ in range(10):
+            your_house.add_exit(your_house, your_house.name, [])
+        your_house.visit()
+        print(your_house.exit())
 
 def loc_your_house():
     input("You are ensconced within your middle class home.")
@@ -153,7 +207,7 @@ def util_exit():
 
 #begin here
 def main():
-    Place.test()
+    Waypoint.test()
 
 def load_from_save():
     # first check for existence of save
