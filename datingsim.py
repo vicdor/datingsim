@@ -4,12 +4,13 @@ class Decision(object):
         for choice in choices:
             assert isinstance(choice, Choice)
         self.choices = choices
-    def select(self, *args):
-        raise Error("Not yet implemented")
     def make(self, *args):
+        """Carry out process for making a choice. Returns a function to call."""
         raise Error("Not yet implemented")
 
 class RangeDecision(object):
+    """Implements Decision by passing decision-making to command line input.
+    Choices are numbered by natural numbers, and user selects choice by entering number."""
     def __init__(self, choices):
         Decision.__init__(self, choices)
     def make(self):
@@ -30,12 +31,12 @@ class RangeDecision(object):
 #TODO: change callback into something indicative of a not called value that is returned
 class Choice(object):
     """A choice that the player can choose."""
-    def __init__(self, desc, post_desc, callback):
+    def __init__(self, desc, post_desc, followup):
         """
         @param desc: a one-line string desc of this choice
         @param post_desc: a string or a list of strings that are displayed in order
         after the player decides on this Choice and before callback is called
-        @param callback: the function that is returned upon the user deciding this choice
+        @param followup: the function that is returned upon the user deciding this choice
 
         >>> c = Choice('hello', 10, None) #doctest: +ELLIPSIS
         Traceback (most recent call last):
@@ -50,26 +51,28 @@ class Choice(object):
         'hai thar'
         >>> c.post_desc
         ['hello']
-        >>> print(c.callback)
+        >>> print(c.followup)
         None
         """
         self.desc = desc
-        self.callback = callback
+        self.followup = followup
         if isinstance(post_desc, str):
             post_desc = [post_desc]
         elif isinstance(post_desc, list):
             for e in post_desc:
                 if not isinstance(e, str):
-                    raise TypeError("{} cannot only have str elements".format(post_desc))
+                    raise TypeError("{} can only have str elements".format(post_desc))
         else:
             raise TypeError("{} must be str or list of str".format(post_desc))
         self.post_desc = post_desc
     def __str__(self):
         return self.desc
     def choose(self):
+        """Called when this choice is chosen. Prints out post_desc lines and then returns
+        the callback function."""
         for line in self.post_desc:
             input(line)
-        return self.callback
+        return self.followup
 
 def loc_your_house():
     input("You are ensconced within your middle class home.")
@@ -203,6 +206,9 @@ def limited_input(seq, process_fn=None, input_prompt=None, error_prompt=None, va
 
 #begin here
 def main():
+    RangeDecision.test()
+
+def load_from_save():
     # first check for existence of save
     from save import Save
     s = Save.makeFromPickle()
