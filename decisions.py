@@ -55,6 +55,22 @@ class Choice(object):
         self.post_desc.show_all()
         return self.followup
 
+    @staticmethod
+    def test():
+        visit_desc = ["You are ensconced within your middle class home",
+                "Suddenly, a ringing from the doorbell."]
+        c1 = Choice('Exit through the back door',
+                ['Wearing your favorite diamond mocassins, you slip through the backdoor with grace '
+                    'and finesse.', 'You are now at the park.'], loc_the_park)
+        c2 = Choice("Check on the front door to see who's there",
+                ["You tiptoe to the door.",
+                    "Neglecting to peer through the peephole, you unwisely swing open the hinges.",
+                    "FAAAAAAAAACK! It's Proto Krippendorf!"], boy_proto_krippendorf)
+        r = RangeDecision([c1, c2])
+        your_house = Place(visit_desc, r)
+        your_house.visit()
+        print(your_house.exit())
+
 #Input Utilities
 def range_input(a, b=None, convert=False):
     if (b == None):
