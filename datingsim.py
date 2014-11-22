@@ -57,17 +57,16 @@ class Choice(object):
 
 class Place(object):
     """A Place is somewhere that the player can visit, and which leads to another Place."""
-    def __init__(self, visit_desc, exit):
-        """@param visit_desc: a string or a list of strings that is printed when the player first
-        arrives at this Place.
+    def __init__(self, visit_desc, exit, dialogue_type=SelfPacedDialogue):
+        """@param visit_desc: a Dialogue or a Dialogue argument
         @param exit: either another Place, which is to be returned by self.exit(); a function,
         which is called by self.exit() to be evaluated into a Place to be returned; or a Decision
-        which is made during a call to self.exit() and whose make() fn returns a Place"""
-
-        if isinstance(visit_desc, str):
-            visit_desc = [visit_desc]
-        self.visit_desc = visit_desc
-
+        which is made during a call to self.exit() and whose make() fn returns a Place
+        @param dialogue_type: the type of Dialogue that visit_desc is converted to."""
+        if isinstance(visit_desc, Dialogue):
+            self.visit_desc = visit_desc
+        else:
+            self.visit_desc = dialogue_type(visit_desc)
         if hasattr(exit, '__call__'):  # exit is fn
             self._exit_is_fn = True
             self.exit = exit
@@ -82,8 +81,7 @@ class Place(object):
 
     def visit(self):
         """Called when player visits this place."""
-        for s in self.visit_desc:
-            input(s)
+        self.visit_desc.show_all()
 
     def exit(self):
         """Called when it's time to leave this place. Returns the next place to be visited."""
