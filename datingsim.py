@@ -14,11 +14,20 @@ class RangeDecision(object):
         Decision.__init__(self, choices)
     def make(self):
         for i, choice in enumerate(self.choices):
-            print("({num}) {desc})".format(num=i, desc=choice))
-        n = range_input(0, len(self.choices)-1)
+            print("({num}) {desc}".format(num=i+1, desc=choice))
+        n = range_input(len(self.choices)) - 1
+        return self.choices[n].choose()
+
+    @staticmethod
+    def test():
+        c1 = Choice("The first choice. Ao-some.", ["line1","line2","line3"],
+                (lambda: print("callback c1 activated" or [1, 2, 3])))
+        c2 = Choice("The sceond chocie.", [], (lambda: print ("callback 2 activated")))
+        r = RangeDecision([c1, c2])
+        r.make()()
 
 
-
+#TODO: change callback into something indicative of a not called value that is returned
 class Choice(object):
     """A choice that the player can choose."""
     def __init__(self, desc, post_desc, callback):
@@ -26,7 +35,7 @@ class Choice(object):
         @param desc: a one-line string desc of this choice
         @param post_desc: a string or a list of strings that are displayed in order
         after the player decides on this Choice and before callback is called
-        @param callback: the function that is called upon the user deciding this choice
+        @param callback: the function that is returned upon the user deciding this choice
 
         >>> c = Choice('hello', 10, None) #doctest: +ELLIPSIS
         Traceback (most recent call last):
@@ -55,8 +64,12 @@ class Choice(object):
         else:
             raise TypeError("{} must be str or list of str".format(post_desc))
         self.post_desc = post_desc
-    def __str__():
-        return desc
+    def __str__(self):
+        return self.desc
+    def choose(self):
+        for line in self.post_desc:
+            input(line)
+        return self.callback
 
 def loc_your_house():
     input("You are ensconced within your middle class home.")
