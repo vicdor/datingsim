@@ -4,16 +4,22 @@ class Decision(object):
         for choice in choices:
             assert isinstance(choice, Choice)
         self.choices = choices
+    def add(self, choice):
+        """Add another choice to this Decision."""
+        assert isinstance(choice, Choice)
+        self.choices.append(choice)
     def make(self, *args):
         """Carry out process for making a choice. Returns a function to call."""
         raise Error("Not yet implemented")
 
-class RangeDecision(object):
+class RangeDecision(Decision):
     """Implements Decision by passing decision-making to command line input.
     Choices are numbered by natural numbers, and user selects choice by entering number."""
-    def __init__(self, choices):
+    def __init__(self, choices, decision_prompt=None):
         Decision.__init__(self, choices)
+        self.decision_prompt = decision_prompt or "What will you do?"
     def make(self):
+        print(decision_prompt)
         for i, choice in enumerate(self.choices):
             print("({num}) {desc}".format(num=i+1, desc=choice))
         n = range_input(len(self.choices)) - 1
@@ -77,12 +83,23 @@ class Choice(object):
 def loc_your_house():
     input("You are ensconced within your middle class home.")
     input("Suddenly, a ringing from the doorbell.")
+    c1 = Choice('Exit through the back door',
+            ['Wearing your favorite diamond mocassins, you slip through the backdoor with grace '
+                'and finesse.', 'You are now at the park.'], loc_the_park)
+    c2 = Choice("Check on the front door to see who's there",
+            ["You tiptoe to the door.",
+                "Neglecting to peer through the peephole, you unwisely swing open the hinges.",
+                "FAAAAAAAAACK! It's Proto Krippendorf!"],
+            boy_proto_krippendorf)
+    r = RangeDecision([c1, c2])
+    r.add(c2)
+    r.make()
+
     print("""What will you do?
     (1)Exit through the back door
     (2)Check on the front door to see who's there""")
 
     n = range_input(2)
-
     if (n == 1):
         input("""Wearing your favorite diamond mocassins, you slip through
         the backdoor with grace and finesse.""")
@@ -183,13 +200,13 @@ def range_input(a, b=None, convert=False):
         r = range(1, a+1)
     else:
         r = range(a, b)
-    return limited_input(r, int, error_prompt='not a choice', value_error_prompt='please enter an integer')
+    return limited_input(r, int, invalid_prompt='not a choice', value_error_prompt='please enter an integer')
 
-def limited_input(seq, process_fn=None, input_prompt=None, error_prompt=None, value_error_prompt=None):
+def limited_input(seq, process_fn=None, input_prompt=None, invalid_prompt=None, value_error_prompt=None):
     """Takes user input and processes, but only accepts that in seq"""
     process_fn = process_fn or (lambda x: x)
     prompt = input_prompt or "==> "
-    error_prompt = error_prompt or 'invalid input. please try again'
+    invalid_prompt = invalid_prompt or 'invalid input. please try again'
     value_error_prompt = value_error_prompt or error_prompt
     complete = False
     while not complete:
@@ -198,7 +215,7 @@ def limited_input(seq, process_fn=None, input_prompt=None, error_prompt=None, va
             if n in seq:
                 complete = True
             else:
-                print(error_prompt)
+                print(invalid_prompt)
         except ValueError:
             print(value_error_prompt)
     return n
