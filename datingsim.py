@@ -1,3 +1,5 @@
+from dialogue import *
+
 class Decision(object):
     """A glorified list of Choices. Represents and provides an interface to a player decision."""
     def __init__(self, choices):
@@ -37,31 +39,23 @@ class RangeDecision(Decision):
 #TODO: change callback into something indicative of a not called value that is returned
 class Choice(object):
     """A choice that the player can choose."""
-    def __init__(self, desc, post_desc, followup):
+    def __init__(self, desc, post_desc, followup, dialogue_type=SelfPacedDialogue):
         """
         @param desc: a one-line string desc of this choice
-        @param post_desc: a string or a list of strings that are displayed in order
+        @param post_desc: a Dialogue or a Dialogue argument that is played when this choice is chosen
         after the player decides on this Choice and before callback is called
         @param followup: the value that is returned when the user chooses this choice
+        @param dialogue_type: the dialogue_type that is used to convert non-Dialogue post_desc
         """
         self.desc = desc
         self.followup = followup
-        if isinstance(post_desc, str):
-            post_desc = [post_desc]
-        elif isinstance(post_desc, list):
-            for e in post_desc:
-                if not isinstance(e, str):
-                    raise TypeError("{} can only have str elements".format(post_desc))
-        else:
-            raise TypeError("{} must be str or list of str".format(post_desc))
-        self.post_desc = post_desc
+        self.post_desc = post_desc if isinstance(post_desc, Dialogue) else dialogue_type(post_desc)
     def __str__(self):
         return self.desc
     def choose(self):
         """Called when this choice is chosen. Prints out post_desc lines and then returns
         the callback function."""
-        for line in self.post_desc:
-            input(line)
+        self.post_desc.show_all()
         return self.followup
 
 class Place(object):
@@ -117,48 +111,6 @@ class Place(object):
         your_house.visit()
         print(your_house.exit())
         
-class Dialogue(object):
-    """A Dialogue is a passage of text, divided into chunks that are
-    to be displayed one-by-one."""
-    def __init__(self, chunks):
-        """@param chunks either a list of strings or a string. The string will be converted into
-        a list consisting of that string.
-        """
-        if isinstance(chunks, list):
-            for e in chunks:
-                assert isinstance(e, str)
-        elif isinstance(chunks, str):
-            chunks = [chunks]
-        self.chunks = chunks
-        self.position = 0
-
-    def show_all(self):
-        """Calls show_next repeatedly until there is no more to show."""
-        while self.has_more():
-            self.show_next()
-
-    def show_next(self):
-        print(self.chunk[self.position])
-        self.position += 1
-
-    def peek(self):
-        """Returns the next chunk to displayed (a string). Internally, the Dialogue object
-        acts as if this chunk has not been accessed yet."""
-        return self.chunk[self.position]
-
-    def has_more(self):
-        """Returns whether more chunks of text remain."""
-        return self.position < len(self)
-
-    def __len__(self):
-        """The number of chunks of text that are displayed by this Dialogue."""
-        return len(self.chunks)
-
-class SelfPacedDialogue(Dialogue):
-    """Waits for user to press return with each show_next."""
-    def show_next(self):
-        input(self.chunk[self.position])
-        self.position += 1
 
 def loc_your_house():
     input("You are ensconced within your middle class home.")
