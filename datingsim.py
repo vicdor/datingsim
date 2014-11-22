@@ -1,3 +1,47 @@
+class Decision(object):
+    """A glorified list of Choices. Represents and provides an interface to a player decision."""
+
+class Choice(object):
+    """Represents and provides an interface to decisions that the player can make."""
+    def __init__(self, desc, post_desc, callback):
+        """
+        @param desc: a one-line string desc of this choice
+        @param post_desc: a string or a list of strings that are displayed in order
+        after the player decides on this Choice and before callback is called
+        @param callback: the function that is called upon the user deciding this choice
+
+        >>> c = Choice('hello', 10, None) #doctest: +ELLIPSIS
+        Traceback (most recent call last):
+          ...
+        TypeError...
+        >>> c = Choice('hello', ['asdf', 'asdf', 'asdf', []], None) #doctest: +ELLIPSIS
+        Traceback (most recent call last):
+          ...
+        TypeError...
+        >>> c = Choice('hai thar', 'hello', None)
+        >>> c.desc
+        'hai thar'
+        >>> c.post_desc
+        ['hello']
+        >>> print(c.callback)
+        None
+        """
+        self.desc = desc
+        self.callback = callback
+        if isinstance(post_desc, str):
+            post_desc = [post_desc]
+        elif isinstance(post_desc, list):
+            for e in post_desc:
+                if not isinstance(e, str):
+                    raise TypeError("{} cannot only have str elements".format(post_desc))
+        else:
+            raise TypeError("{} must be str or list of str".format(post_desc))
+        self.post_desc = post_desc
+
+
+class RangeChoice(Choice):
+    pass
+
 def loc_your_house():
     input("You are ensconced within your middle class home.")
     input("Suddenly, a ringing from the doorbell.")
