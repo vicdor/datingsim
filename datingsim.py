@@ -239,5 +239,3 @@ def game_loop(initial_loc=loc_your_house):
 
 if (__name__ == '__main__'):
     main()
-else:
-    print("lol why did you import")
