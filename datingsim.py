@@ -1,8 +1,26 @@
 class Decision(object):
     """A glorified list of Choices. Represents and provides an interface to a player decision."""
+    def __init__(self, choices):
+        for choice in choices:
+            assert isinstance(choice, Choice)
+        self.choices = choices
+    def select(self, *args):
+        raise Error("Not yet implemented")
+    def make(self, *args):
+        raise Error("Not yet implemented")
+
+class RangeDecision(object):
+    def __init__(self, choices):
+        Decision.__init__(self, choices)
+    def make(self):
+        for i, choice in enumerate(self.choices):
+            print("({num}) {desc})".format(num=i, desc=choice))
+        n = range_input(0, len(self.choices)-1)
+
+
 
 class Choice(object):
-    """Represents and provides an interface to decisions that the player can make."""
+    """A choice that the player can choose."""
     def __init__(self, desc, post_desc, callback):
         """
         @param desc: a one-line string desc of this choice
@@ -37,10 +55,8 @@ class Choice(object):
         else:
             raise TypeError("{} must be str or list of str".format(post_desc))
         self.post_desc = post_desc
-
-
-class RangeChoice(Choice):
-    pass
+    def __str__():
+        return desc
 
 def loc_your_house():
     input("You are ensconced within your middle class home.")
@@ -146,23 +162,31 @@ def util_exit():
     quit()
 
 #Input Utilities
-def range_input(a, b=None):
+def range_input(a, b=None, convert=False):
     if (b == None):
         r = range(1, a+1)
     else:
         r = range(a, b)
+    return limited_input(r, int, error_prompt='not a choice', value_error_prompt='please enter an integer')
 
+def limited_input(seq, process_fn=None, input_prompt=None, error_prompt=None, value_error_prompt=None):
+    """Takes user input and processes, but only accepts that in seq"""
+    process_fn = process_fn or (lambda x: x)
+    prompt = input_prompt or "==> "
+    error_prompt = error_prompt or 'invalid input. please try again'
+    value_error_prompt = value_error_prompt or error_prompt
     complete = False
     while not complete:
         try:
-            n = int(input('==> '))
-            if n in r:
+            n = process_fn(input(prompt))
+            if n in seq:
                 complete = True
             else:
-                print("invalid integer")
+                print(error_prompt)
         except ValueError:
-            print("invalid input, please enter an integer")
+            print(value_error_prompt)
     return n
+    
 
 #begin here
 def main():
