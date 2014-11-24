@@ -1,6 +1,50 @@
 from dialogue import *
 from decisions import *
 
+class World(object):
+    """A World is a dictionary-like collection of related Places. Since the same 'place' in the game
+    is actually one of several different Place instances depending on the state of the World,
+    (e.g. night or day), it is best that a Place store a exit as a DelayedAccesses pointing
+    to a World attribute rather than a pointer to any particular Place."""
+    def __init__(self, mappings=None, **kargs):
+        """
+        @param mappings: a dictionary that maps strings to Places
+        @param **kargs: more mappings from strings to Places
+        """
+        if mappings:
+            assert isinstance(mappings, dict)
+            for key, value in mappings.items():
+                assert isinstance(key, str)
+                assert isinstance(value, Place)
+            self._dict = mappings
+        else:
+            self._dict = {}
+
+    def __get__(self, key):
+        """Returns a DelayedAccess instance that delay points to the Place associated with key"""
+        assert key in self._dict
+        return DelayedAccess(lambda: self._dict[key])
+
+    def __set__(self, key, value):
+        """Map a string to a value, either a Place or a DelayedAccess object."""
+        assert isinstance(key, str)
+        assert isinstance(value, Place) or isinstance(value, DelayedAccess)
+        self._dict[key] = value
+
+class DelayedAccess(object):
+    """A DelayedAccess represents a pointer that changes over time."""
+    def __init__(self, pointer_fn):
+        """
+        @param pointer_fn: a zero-argument function is called to retrieve a pointer.
+        """
+        assert callable(pointer_fn)
+        self.pointer_fn = pointer_fn
+
+    def get(self):
+        """Retrieves the pointer associated with this DelayedAccess instance."""
+        return self.pointer_fn()
+
+
 class Place(object):
     """A Place is somewhere that the player can visit, and which leads to another Place."""
     def __init__(self, name, visit_desc, exit, dialogue_type=SelfPacedDialogue):
