@@ -39,6 +39,9 @@ class DelayedAccess(object):
         assert callable(pointer_fn)
         self.pointer_fn = pointer_fn
 
+    def __call__(self):
+        return self.get()
+
     def get(self):
         """Retrieves the pointer associated with this DelayedAccess instance."""
         return self.pointer_fn()
