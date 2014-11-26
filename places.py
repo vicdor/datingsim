@@ -19,8 +19,19 @@ class World(object):
         else:
             self._dict = {}
 
+    def build(self):
+        """Call this when all Places in this world have been defined, so calculations
+        that depend on Places can take place. trolololo"""
+        for place in self._dict.values():
+            place.build()
+
     def __getitem__(self, key):
         """Returns a DelayedAccess instance that delay points to the Place associated with key"""
+
+        ###very very temporary
+        return self._dict[key]
+        ###/end
+        
         #assert key in self._dict
         return DelayedAccess(lambda: self._dict[key])
 
@@ -45,6 +56,19 @@ class DelayedAccess(object):
     def get(self):
         """Retrieves the pointer associated with this DelayedAccess instance."""
         return self.pointer_fn()
+
+    @staticmethod
+    def call_or_leave_unchanged(x):
+        """Accesses pointer if x is DelayedAccess, otherwise returns x unchanged"""
+        if isinstance(x, DelayedAccess):
+            return x.get()
+        else:
+            return x
+
+    @staticmethod
+    def eval_list(seq):
+        """Maps call_or_leave_unchanged to a sequence, returning a list."""
+        [call_or_leavel_unchanged(x) for x in seq]
 
 
 class Place(object):
@@ -76,6 +100,9 @@ class Place(object):
         else:
             raise TypeError('{} is invalid exit'.format(exit))
 
+    def build(self):
+        """Call this when all Place dependents have been defined."""
+
     def visit(self):
         """Called when player visits this place."""
         self.visit_desc.show_all()
@@ -106,36 +133,46 @@ class Place(object):
 
 class Waypoint(Place):
     """A Waypoint is a specialized Place with many exits."""
-    def __init__(self, name, visit_desc, exits, dialogue_type=SelfPacedDialogue, exit_prompt=None, default_exit_desc=None):
-        """@param exits: a list of exits, or (exits, desc_str) tuples. Exits can 
+    def __init__(self, name, visit_desc, exits=[], dialogue_type=SelfPacedDialogue, exit_prompt=None, default_exit_desc=None):
+        """
+        @param name: name of this place
+        @visit_desc: this is shown when this place is visited
+        @param exits: a list of exits, or (exits, desc_str) tuples. Exits can 
         be added later using the add_exit() fn, so it is okay to leave this empty.
         Warning: if not using tuple form, functions as exits will fail unless default_exit_desc is changed.
         @param exit_prompt: the prompt shown when the user chooses between exits. Generic default.
         @param default_exit_desc: the processing fn that is used to make exit choice descriptions 
-        if exits doesn't come in (exit, desc_str) form. By default, just take the Place name attr."""
+        if exits doesn't come in (exit, choice_desc_str, post_choice_str) form. By default, just take the Place name attr."""
         self.exit_prompt = exit_prompt or "Where will you go?"
-        self.default_exit_desc = default_exit_desc or (lambda place: place.name)
+        self.default_exit_desc = default_exit_desc = default_exit_desc or (lambda place: place.name)
 
-        all_tuples = True
-        all_exits = True
-        for e in exits:
-            if isinstance(e, tuple) or isinstance(e, list):
-                assert isinstance(e[1], str)
-                assert isinstance(e[0], Place) or callable(e)
-                all_exits = False
-            else:
-                assert isinstance(e, Place) or callable(e)
-                all_tuples = False
-        assert all_tuples ^ all_exits or len(exits) == 0
-
-        if all_exits:
-            exits = [(p, default_exit_desc(p), "You visit "+default_exit_desc(p)) for p in exits]
-        choices = []
-        for e, desc, post_desc in exits:
-            choices.append(Choice(desc, post_desc, followup=e))
-        self._decision = exit = RangeDecision(choices, self.exit_prompt)
-
+        self._decision = exit = RangeDecision([], self.exit_prompt)
         Place.__init__(self, name, visit_desc, exit)
+
+        def build():
+            all_tuples = True
+            all_exits = True
+            for e in exits:
+                if isinstance(e, tuple) or isinstance(e, list):
+                    assert isinstance(e[0], Place) or callable(e)
+                    assert isinstance(e[1], str)
+                    assert isinstance(e[2], str)
+                    all_exits = False
+                else:
+                    assert isinstance(e, Place) or callable(e)
+                    all_tuples = False
+            assert all_tuples ^ all_exits or len(exits) == 0
+
+            if len(exits) == 0:
+                pass
+            elif all_exits:
+                tuples  = [(p, default_exit_desc(p), []) for p in exits]
+            elif all_tuples:
+                tuples  = [(place, default_exit_desc(place), []) for p in exits]
+
+            for e, desc, post_desc in exits:
+                add_exit(Choice(desc, post_desc, followup=e))
+        self.build = build
             
     def add_exit(self, exit, desc, post_desc):
         assert isinstance(exit, Place) or callable(exit)

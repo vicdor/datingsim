@@ -24,36 +24,29 @@ def util_exit():
     print("Thank you for playing Shitty Dating Sim.")
     quit()
 
-    
+world = World()    
+world['bedroom'] = Waypoint('bedroom', ["You arrive in your bedroom", "meh."])
+world['window'] = Place('window', ["You stare out the window"], world['bedroom'])
+world['wardroom'] = Place('window', ["You arrive in your wardroom"], world['bedroom'])
+world['bedroom'].add_exit(world['window'], 'visit the window', [])
+world['bedroom'].add_exit(world['wardroom'], 'visit the wardrobe', [])
+world.build()
 
 #begin here
 def main():
-    Waypoint.test()
-
-def load_from_save():
-    # first check for existence of save
-    from save import Save
-    s = Save.makeFromPickle()
-    if not s:
-        game_loop()
-    else:
-        # restore existing save
-        # v 0.1 save is stored as a dict in s["v0.1"]
-        #    location: pointer to function of save location
-        #    starting_msg: print before restoring to location
-        data = s.dict["v0.1"]
-        print(data["starting_msg"])
-        game_loop(data["location"])
+    game_loop(world['bedroom'])
         
-def game_loop(initial_loc=loc_your_house):
-    prev_loc = location = initial_loc
-    while(location != 'quit'):
-        print("current location is {}".format(location))
-        location = location()
-        if location == None:
-            location = prev_loc
+def game_loop(initial_place):
+    prev_place = place = initial_place
+    while(True):
+        print("current place is {}".format(place))
+        place.visit()
+        place = place.exit()
+        if place == None:
+            place = prev_place
         else:
-            prev_loc = location
+            prev_place = place
+
 
 if (__name__ == '__main__'):
     main()
