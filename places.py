@@ -21,7 +21,7 @@ class World(object):
 
     def __get__(self, key):
         """Returns a DelayedAccess instance that delay points to the Place associated with key"""
-        assert key in self._dict
+        #assert key in self._dict
         return DelayedAccess(lambda: self._dict[key])
 
     def __set__(self, key, value):
