@@ -19,12 +19,12 @@ class World(object):
         else:
             self._dict = {}
 
-    def __get__(self, key):
+    def __getitem__(self, key):
         """Returns a DelayedAccess instance that delay points to the Place associated with key"""
         #assert key in self._dict
         return DelayedAccess(lambda: self._dict[key])
 
-    def __set__(self, key, value):
+    def __setitem__(self, key, value):
         """Map a string to a value, either a Place or a DelayedAccess object."""
         assert isinstance(key, str)
         assert isinstance(value, Place) or isinstance(value, DelayedAccess)
