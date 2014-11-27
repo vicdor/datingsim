@@ -36,10 +36,12 @@ class Dialogue(object):
         self.chunks = chunks
         self.position = 0
 
-    def show_all(self):
+    def show_all(self, reset_on_complete=True):
         """Calls show_next repeatedly until there is no more to show."""
         while self.has_more():
             self.show_next()
+        if reset_on_complete:
+            self.reset()
 
     def show_next(self):
         print(self.chunks[self.position])
@@ -53,6 +55,10 @@ class Dialogue(object):
     def has_more(self):
         """Returns whether more chunks of text remain."""
         return self.position < len(self)
+
+    def reset(self):
+        """Allows this dialogue to begin again from the beginning."""
+        self.position = 0
 
     def __len__(self):
         """The number of chunks of text that are displayed by this Dialogue."""
