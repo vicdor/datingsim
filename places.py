@@ -77,9 +77,7 @@ class Place(object):
         """
         @param name: a brief string description of this place
         @param visit_desc: a Dialogue or a Dialogue argument that is displayed when Place is visited
-        @param exit: either another Place, which is to be returned by self.exit(); a function,
-        which is called by self.exit() to be evaluated into a Place to be returned; or a Decision
-        which is made during a call to self.exit() and whose make() fn returns a Place
+        @param exit: a Place or a zero arg fn that returns a Place
         @param dialogue_type: the type of Dialogue that visit_desc is converted to."""
         assert isinstance(name, str)
         self.name = name
@@ -88,12 +86,9 @@ class Place(object):
             self.visit_desc = visit_desc
         else:
             self.visit_desc = dialogue_type(visit_desc)
-        if hasattr(exit, '__call__'):  # exit is fn
+        if callable(exit):
             self._exit_is_fn = True
             self.exit = exit
-        elif isinstance(exit, Decision):
-            self._exit_is_fn = True
-            self.exit = exit.make
         elif isinstance(exit, Place):
             self._exit_is_fn = False
             self._exit = exit
@@ -109,8 +104,14 @@ class Place(object):
 
     def exit(self):
         """Called when it's time to leave this place. Returns the next place to be visited."""
+        def check_is_place(x):
+            if not isinstance(x):
+                raise TypeError("{fn} did not return a Place, but returned {x}!".format(
+                    fn=self._exit, x=x))
+            return x
+
         if self._exit_is_fn:
-            return self._exit()
+            return check_is_place(self._exit())
         else:
             return self._exit
 
@@ -127,7 +128,7 @@ class Place(object):
                     "Neglecting to peer through the peephole, you unwisely swing open the hinges.",
                     "FAAAAAAAAACK! It's Proto Krippendorf!"], boy_proto_krippendorf)
         r = RangeDecision([c1, c2])
-        your_house = Place(name, visit_desc, r)
+        your_house = Place(name, visit_desc, r.make)
         your_house.visit()
         print(your_house.exit())
 
