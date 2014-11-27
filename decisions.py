@@ -13,6 +13,10 @@ class Decision(object):
     def make(self, *args):
         """Carry out process for making a choice. Returns a function to call."""
         raise Error("Not yet implemented")
+    def empty(self):
+        """Empty this Decision of all choices."""
+        self.choices = []
+
 
 class RangeDecision(Decision):
     """Implements Decision by passing decision-making to command line input.
