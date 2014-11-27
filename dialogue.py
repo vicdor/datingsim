@@ -1,6 +1,29 @@
 class Dialogue(object):
     """A Dialogue is a passage of text, divided into chunks that are
-    to be displayed one-by-one."""
+    to be displayed one-by-one.
+    >>> d = Dialogue("Hello")
+    >>> d.show_all()
+    Hello
+    >>> chunks = 'what a day'.split()
+    >>> d2 = Dialogue(chunks)
+    >>> d2.show_next()
+    what
+    >>> d2.peek() == d2.peek()
+    True
+    >>> d2.peek()
+    'a'
+    >>> d2.show_all()
+    a
+    day
+    >>> d2.show_all()
+    >>> d3 = Dialogue(chunks)
+    >>> d3.show_all()
+    what
+    a
+    day
+    >>> d3.has_more()
+    False
+    """
     def __init__(self, chunks):
         """@param chunks either a list of strings or a string. The string will be converted into
         a list consisting of that string.
@@ -19,7 +42,7 @@ class Dialogue(object):
             self.show_next()
 
     def show_next(self):
-        print(self.chunk[self.position])
+        print(self.chunks[self.position])
         self.position += 1
 
     def peek(self):
@@ -37,6 +60,8 @@ class Dialogue(object):
 
 class SelfPacedDialogue(Dialogue):
     """Waits for user to press return with each show_next."""
+    
     def show_next(self):
         input(self.chunks[self.position])
         self.position += 1
+        
