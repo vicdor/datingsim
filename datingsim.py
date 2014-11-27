@@ -23,18 +23,9 @@ def util_exit():
     print()
     print("Thank you for playing Shitty Dating Sim.")
     quit()
-
-world = World()    
-world['bedroom'] = Waypoint('bedroom', ["You arrive in your bedroom", "meh."])
-world['window'] = Place('window', ["You stare out the window"], world['bedroom'])
-world['wardroom'] = Place('window', ["You arrive in your wardroom"], world['bedroom'])
-world['bedroom'].add_exit(world['window'], 'visit the window', [])
-world['bedroom'].add_exit(world['wardroom'], 'visit the wardrobe', [])
-world.build()
-
 #begin here
 def main():
-    game_loop(world['bedroom'])
+    pass
         
 def game_loop(initial_place):
     prev_place = place = initial_place
