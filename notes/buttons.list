@@ -1,0 +1,50 @@
+HOME: home
+    Sleep (restore HP)
+    Save Game (save game data)
+    Phone (phone a girl -5 hp)
+BEACH OF THE WEST: beach_east
+BEACH OF THE EAST: beach_west
+    Swim (train SPD + STR)
+    Sun Bathe (train persuasion)
+NIGHT CLUB: club
+    Date (meet some girls)
+    Drink (20 gold, 20 HP\n raise charm)
+THE CLINIC: clinic
+    Work (wage = charm + persuasion)
+MOUNTAIN AREA: mountain
+    Shop (buy some items)
+HOT SPRINGS: springs
+    Romance (cost 20 hp)
+    Relax (lay low for a while)
+GREAT RIVER: river
+    Date (meet some girls)
+THE CASINO: casion
+    TWILIGHT ZONE (play minigame)
+    SLOT MACHINE (win cash!)
+    BREAK OUT (play minigame)
+DARK CITY: city
+    Work (wage = strengt x 1.50)
+THE WOODS: woods
+    Work (wage = speed x 1.5)
+    Relax (lay low for a while)
+THE VILLAGE: village
+    Glinda (pay a Visit)
+    Elphaba
+    Nessarose
+    Eponine
+    Fantine
+    Cosette
+TOWN INN: inn
+    Work (wage = persuasion x 1.75)
+    Plunder (random profit) [power + speed*(0.1~5.0)]
+ROYAL CASTLE: castle
+    Work (wage = magic*1.50)
+    Plunder (random profit)
+    Shop (buy some items)
+Twilight Valley: valley
+    Train Magic (cost 20 hp)
+    Train Speed (cost 20 hp)
+    Train Power (cost 20 hp)
+Training Area: gym
+    Work (wage=persuasion+charm)
+    Workout (100 hp, train all stats)
