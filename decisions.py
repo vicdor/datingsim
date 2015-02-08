@@ -12,7 +12,7 @@ class Decision(object):
         self.choices.append(choice)
     def remove(self, choice):
         """Remove a choice that equals given argument from this Decision.
-        A ValueError is thrown if the choice does not exist."""
+        A ValueError is raised if the choice does not exist."""
         self.choices.remove(choice)
     def make(self, *args):
         """Carry out process for making a choice. Returns a function to call."""
