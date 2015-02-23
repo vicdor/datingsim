@@ -35,7 +35,7 @@ def title_state():
 
     pygame.display.flip()
 
-    pygame.mixer.music.load('forest.wav')
+    pygame.mixer.music.load('assets/forest.wav')
     pygame.mixer.music.play()
 
     done = False

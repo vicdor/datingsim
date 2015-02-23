@@ -15,6 +15,7 @@ class Assets():
     instance = None
 
     imgs = {}
+    msks = {}
 
     def __init__(self):
         self._dict = {}
@@ -34,6 +35,14 @@ class Assets():
             if force_fit and __name__ != '__main__':
                 img = do_force_fit(img)
             self.imgs[key] = img
+
+        msk_data = [('club', 'club.wav'),
+                ('forest', 'forest.wav')
+
+                ]
+        for key, file_name in msk_data:
+            Assets.msk = pygame.mixer.Sound('assets/' + file_name)
+            self.msks[key] = file_name
 
     #quick hack for use_fillers
     def get_img_safe(self, item):
