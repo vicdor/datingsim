@@ -27,7 +27,11 @@ class Assets():
                   ('BG_beach_east', 'beach.jpg', True),
                   ('BG_island_map', 'island-map.jpg', True),
                   ('BG_river', 'river.jpg', True),
-                  ('BG_club', 'club.jpg', True)
+                  ('BG_club', 'club.jpg', True),
+
+                  ('GURL_kanaya_askance', 'kanaya_askance.png', False),
+                  ('GURL_kanaya_smile', 'kanaya_smile.png', False)
+
 
                 ]
         for key, file_name, force_fit in images:
