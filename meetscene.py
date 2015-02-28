@@ -5,12 +5,18 @@ from gurl import Gurl
 
 class MeetScene:
 
-    def __init__(self, gurl, bg_img=None, gurl_img_pos=(300, 300),
-                 textPos=(0,400), textSize=(130,180)):
+    def __init__(self, gurl, bg_img=None, gurl_img_pos=(300, 300), textPos=(0,400),
+                 textSize=(130,180), use_default_buttons=True):
         self.gurl = gurl
         self.bg_img = bg_img
         self.gurl_img_pos = gurl_img_pos
+        self.mood = "default"
         self.meet_advisor = MeetAdvisor(gurl)
+
+
+        self.gurl_textbox = TextBox("filler", textPos, textSize)
+        self.all_sprites = pygame.sprite.Group(self.meet_advisor,
+                            self.gurl_textbox)
 
         self.buttons = pygame.sprite.Group()
         prevx, prevy = None, 300
@@ -25,25 +31,48 @@ class MeetScene:
             b = BlockButton(on_click, color, pos=(x,y), size=size, text=name)
             prevx = x
             self.buttons.add(b)
-        make_button("test button", lambda: print("test 1"))
-        def finish():
-            self.done = True
-        make_button("end", finish)
-        make_button("update conv", lambda: self.update_conversation("changed"))
+            self.all_sprites.add(b)
+        self.add_button = make_button
+        if use_default_buttons:
+            self.add_default_buttons()
 
-        self.gurl_textbox = TextBox("filler", textPos, textSize)
-        self.all_sprites = pygame.sprite.Group(self.meet_advisor,
-                            self.gurl_textbox, self.buttons)
         self.done = False;
         self.main_surface = pygame.display.get_surface()
+
+    def add_default_buttons(self):
+        b_data = [("talk", self.select_talk), ("ask", self.select_ask), ("date", self.select_date),
+                  ("give", self.select_give)]
+        for name, on_click in b_data:
+            self.add_button(name, on_click)
+
+    def select_talk(self):
+        self.update_conversation("select talk filler")
+    def select_ask(self):
+        self.update_conversation("select ask filler")
+    def select_date(self):
+        self.update_conversation("select date filler")
+    def select_give(self):
+        self.change_mood("askance")
+        self.update_conversation("select give filler")
 
     def ath(self):
         for s in self.all_sprites:
             s.kill()
 
     def get_gurl_img(self):
-        for img in self.gurl.img_dict.values():
-            return img
+        #TODO: get img based on mood
+        if self.mood in self.gurl.img_dict:
+            return self.gurl.img_dict[self.mood]
+        elif 'default' in self.gurl.img_dict:
+            return self.gurl.img_dict['default']
+        else:
+            # just return any image
+            for img in self.gurl.img_dict.values():
+                return img
+
+    def change_mood(self, new_mood):
+        if new_mood in self.gurl.img_dict:
+            self.mood = new_mood
 
     def update_conversation(self, text):
         self.gurl_textbox.text = text;
@@ -87,17 +116,46 @@ class MeetScene:
         d = MeetScene(gurl)
 
     @staticmethod
+    def test_run_test_buttons():
+        pygame.init()
+        datingsim.init()
+        gurl_imgs = {}
+        gurl_imgs['askance'] = datingsim.assets.get_img_safe('GURL_kanaya_askance')
+        gurl_imgs['happy'] = datingsim.assets.get_img_safe('GURL_kanaya_smile')
+        gurl = Gurl("Kanaya", gurl_imgs, None)
+        gurl.exp = 3998
+        d = MeetScene(gurl, use_default_buttons=False)
+        d.add_button("test button", lambda: print("test 1"))
+        def finish():
+            d.done = True
+        d.add_button("end", finish)
+        d.add_button("update conv", lambda: d.update_conversation("changed"))
+        def increase_exp():
+            d.gurl.exp += 1
+        d.add_button("increase exp", increase_exp)
+        d.add_button("happy", lambda: d.change_mood("happy"))
+        d.add_button("askance", lambda: d.change_mood("askance"))
+
+        d.main_loop()
+        d.ath()
+        datingsim.quit()
+        pygame.quit()
+
+    @staticmethod
     def test_run():
         pygame.init()
         datingsim.init()
         gurl_imgs = {}
         gurl_imgs['askance'] = datingsim.assets.get_img_safe('GURL_kanaya_askance')
-        gurl = Gurl("Rudy", gurl_imgs, None)
-        gurl.exp = 2000
+        gurl_imgs['happy'] = gurl_imgs['default'] = datingsim.assets.get_img_safe('GURL_kanaya_smile')
+        gurl = Gurl("Kanaya", gurl_imgs, None)
+        gurl.exp = 3998
         d = MeetScene(gurl)
+
         d.main_loop()
         d.ath()
-
+        datingsim.quit()
+        pygame.quit()
 
 
 class MeetAdvisor(pygame.sprite.Sprite):
@@ -113,7 +171,7 @@ class MeetAdvisor(pygame.sprite.Sprite):
 
     def update(self):
         exp = self.gurl.exp
-        rel_name = self.gurl.calc_rel_level()
+        rel_name = self.gurl.rel_name
         self.text = ("Gurl: {} exp:{} lvl:{}"
                 ).format(self.gurl.name, exp, rel_name)
         self.image = self.font.render(self.text, False, self.font_color)
@@ -133,6 +191,7 @@ class MeetAdvisor(pygame.sprite.Sprite):
 if __name__ == "__main__":
     #MeetAdvisor.test_text()
     #MeetScene.test_instantiate()
+    MeetScene.test_run_test_buttons()
     MeetScene.test_run()
 
 
