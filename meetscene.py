@@ -42,8 +42,25 @@ class MeetScene:
     def add_default_buttons(self):
         b_data = [("talk", self.select_talk), ("ask", self.select_ask), ("date", self.select_date),
                   ("give", self.select_give)]
-        for name, on_click in b_data:
-            self.add_button(name, on_click)
+        clicked_status = []
+        i = 0
+        def make_one_time_button_action(on_first_click):
+            nonlocal clicked_status, i
+            # clicked_status[i] = False  #==> list assignment out of range :P
+            clicked_status.append(False)
+            my_id = i
+            i += 1
+            def on_click():
+                nonlocal clicked_status
+                if clicked_status[my_id]:
+                    return
+                else:
+                    clicked_status[my_id] = True
+                    return on_first_click()
+            return on_click
+
+        for name, on_first_click in b_data:
+            self.add_button(name, make_one_time_button_action(on_first_click))
 
     def select_talk(self):
         self.update_conversation("select talk filler")
@@ -60,7 +77,6 @@ class MeetScene:
             s.kill()
 
     def get_gurl_img(self):
-        #TODO: get img based on mood
         if self.mood in self.gurl.img_dict:
             return self.gurl.img_dict[self.mood]
         elif 'default' in self.gurl.img_dict:
@@ -80,7 +96,6 @@ class MeetScene:
 
 
     def main_loop(self):
-
         while not self.done:
             for event in pygame.event.get():
                 if event.type is pygame.QUIT:
