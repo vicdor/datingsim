@@ -36,6 +36,15 @@ class Gurl:
         level = self.calc_rel_level()
         return Gurl.get_relationship_name(level)
 
+    def do_talk(self):
+        return "do talk filler"
+    def do_ask(self):
+        return "do ask filler"
+    def do_give(self):
+        return "do give filler"
+    def do_date(self):
+        return "do date filler"
+
 
 
 

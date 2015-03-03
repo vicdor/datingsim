@@ -63,14 +63,17 @@ class MeetScene:
             self.add_button(name, make_one_time_button_action(on_first_click))
 
     def select_talk(self):
-        self.update_conversation("select talk filler")
+        msg = self.gurl.do_talk()
+        self.update_conversation(msg)
     def select_ask(self):
-        self.update_conversation("select ask filler")
+        msg = self.gurl.do_ask()
+        self.update_conversation(msg)
     def select_date(self):
-        self.update_conversation("select date filler")
+        msg = self.gurl.do_date()
+        self.update_conversation(msg)
     def select_give(self):
-        self.change_mood("askance")
-        self.update_conversation("select give filler")
+        msg = self.gurl.do_give()
+        self.update_conversation(msg)
 
     def ath(self):
         for s in self.all_sprites:
