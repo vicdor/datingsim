@@ -50,7 +50,8 @@ def world_map():
                    ('inn', [495, 373]),
                    ('village', [353, 194]),
                    ('clinic', [531, 225]),
-                   ('city', [-20, -20])
+                   ('city', [-20, -20]),
+                   ('arcade', [0, 0])
                    )
     for key, pos in button_data:
         loc = datingsim.locs[key]

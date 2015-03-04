@@ -498,6 +498,9 @@ def build_locs():
             [gym_work_data, workout_data],
             bg_img=datingsim.assets.get_img_safe('BG_gym'),
             key='gym')
+    add_loc("Arcade",
+            [],
+            key='arcade')
 
     return _dict
 
