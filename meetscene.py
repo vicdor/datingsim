@@ -209,7 +209,7 @@ class MeetAdvisor(pygame.sprite.Sprite):
 if __name__ == "__main__":
     #MeetAdvisor.test_text()
     #MeetScene.test_instantiate()
-    MeetScene.test_run_test_buttons()
+    #MeetScene.test_run_test_buttons()
     MeetScene.test_run()
 
 

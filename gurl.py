@@ -1,4 +1,5 @@
 import pygame, datingsim
+import random
 
 
 class Gurl:
@@ -37,15 +38,48 @@ class Gurl:
         return Gurl.get_relationship_name(level)
 
     def do_talk(self):
-        return "do talk filler"
+        data = {}
+        data[-1000] = "What the hell do you want?"
+        data[0] = "And who do you think you are?"
+        data[10] = "Hello."
+        data[1000] = ["Here Is A Pleasant Response.", "Hello Human."]
+        return self.retrieve_response(self.exp, data)
+
     def do_ask(self):
-        return "do ask filler"
+        data = {}
+        data[-1000] = "I would like to kill you using a %weapon"
+        data[0] = "Do I even know you?"
+        data[100] = "My favorite color is green."
+        return self.retrieve_response(self.exp, data)
+
     def do_give(self):
         return "do give filler"
     def do_date(self):
         return "do date filler"
 
+    def retrieve_response(self, exp, data):
+        # first find largest key <= exp
+        # todo: implement %gurl_name %player_name
+        def find_lt_or_eq_to(x, seq):
+            best = None
+            for n in seq:
+                if n == x:
+                    return n
+                elif best == None:
+                    best = n
+                elif n < x and n > best:
+                    best = n
+            return best
 
+        best = find_lt_or_eq_to(exp, data.keys())
+        if (best == None):
+            return "No response!"
+        else:
+            if isinstance(data[best], list):
+                result = random.choice(data[best])
+                return result
+            else:
+                return data[best]
 
 
 
