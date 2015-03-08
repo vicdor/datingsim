@@ -9,7 +9,8 @@ class Gurl:
         self.img_dict = img_dict
         self.question_data = question_data
         self.exp = 0
-        self.kissed = False;
+        self.kissed = False
+        self.gaff_count = 0
 
     relationship_names = ['stranger', 'acquaintance', 'friend', 'close friend', 'gurlfriend']
     @staticmethod
@@ -43,6 +44,7 @@ class Gurl:
         data[0] = "And who do you think you are?"
         data[10] = "Hello."
         data[1000] = ["Here Is A Pleasant Response.", "Hello Human."]
+        self.mini_boost()
         return self.retrieve_response(self.exp, data)
 
     def do_ask(self):
@@ -50,12 +52,42 @@ class Gurl:
         data[-1000] = "I would like to kill you using a %weapon"
         data[0] = "Do I even know you?"
         data[100] = "My favorite color is green."
+        self.mini_boost()
         return self.retrieve_response(self.exp, data)
 
     def do_give(self):
         return "do give filler"
     def do_date(self):
         return "do date filler"
+
+    def _boost_helper(self, base_boost):
+        self.exp += min(1, base_boost * pygame.player.boost_multiplier)
+
+    def mini_boost(self):
+        """boost from talking or giving a mediocre item"""
+        self._boost_helper(5)
+
+    def micro_boost(self):
+        """boost from phone chat, or for friendly gurls, just meeting"""
+        self._boost_helper(1)
+
+    def boost(self):
+        """another boost size... probably for entering a date"""
+        self._boost_helper(15)
+
+    def mega_boost(self):
+        """not sure what this is going to be used for"""
+        self._boost_helper(50)
+
+    def gaff(self):
+        """do something stupid"""
+        self.exp -= 20
+        self.gaff_count += 1
+
+    def mega_gaff(self):
+        """do something really stupid"""
+        self.exp -= 100
+        self.gaff_count += 7
 
     def retrieve_response(self, exp, data):
         # first find largest key <= exp

@@ -62,6 +62,10 @@ class Player():
     #    assert self.cash >= 0
     #    self.inventory[key][1] += 1
 
+    @property
+    def boost_multiplier(self):
+        return (self.rom + self.per + 2*self.cha) / 30
+
     def stats_dump(self):
         """Returns str describing all stats."""
         stats = ['name', 'day', 'hp', 'cash',
