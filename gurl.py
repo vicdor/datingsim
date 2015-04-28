@@ -4,14 +4,27 @@ import random
 
 class Gurl:
     debug = True
-    def __init__(self, name, img_dict, question_data):
+    def __init__(self, name, img_dict, talk_data, ask_data=None, quiz_data=None,
+                 ):
         self.name = name
         self.img_dict = img_dict
-        self.question_data = question_data
+        self.talk_data = talk_data
+        self.ask_data = ask_data or Gurl.default_ask_data
+        self.quiz_data = quiz_data or Gurl.default_quiz_data
+        self.trivia = {}
+        self.spoofs = {}
         self.exp = 0
         self.kissed = False
         self.gaff_count = 0
 
+    def set_trivia(self, key, answer, spoofs):
+        """Remember to call this after initializing ur Gurl."""
+        self.trivia[key] = answer
+        self.spoofs[key] = spoofs
+
+
+    default_ask_data = {}
+    default_quiz_data = {}
     relationship_names = ['stranger', 'acquaintance', 'friend', 'close friend', 'gurlfriend']
     @staticmethod
     def get_relationship_num(relationship_name):
@@ -31,29 +44,32 @@ class Gurl:
             if not self.kissed:
                 # cannot be boyfriend until kisssed
                 level -= 1
-        return level
+        return int(level)
 
     @property
     def rel_name(self):
         level = self.calc_rel_level()
         return Gurl.get_relationship_name(level)
 
-    def do_talk(self):
-        data = {}
-        data[-1000] = "What the hell do you want?"
-        data[0] = "And who do you think you are?"
-        data[10] = "Hello."
-        data[1000] = ["Here Is A Pleasant Response.", "Hello Human."]
+    def do_talk(self, data=None):
+        data = data or self.talk_data
         self.mini_boost()
         return self.retrieve_response(self.exp, data)
 
-    def do_ask(self):
-        data = {}
-        data[-1000] = "I would like to kill you using a %weapon"
-        data[0] = "Do I even know you?"
-        data[100] = "My favorite color is green."
+    def do_ask(self, data=None):
+        data = data or self.ask_data
         self.mini_boost()
-        return self.retrieve_response(self.exp, data)
+        return self.retrieve_response(self.exp, data).format(self.trivia)
+
+    trivia = {'book': "Ender's Game", 'waist': 42, 'color': 'green'};
+    def convert_ask_dialogue(self, text):
+        """
+        >>> print(Gurl.convert_ask_dialogue(Gurl, "My favorite color is {color}."))
+        My favorite color is green.
+        >>> print(Gurl.convert_ask_dialogue(Gurl, "My favorite book is {book}."))
+        My favorite book is Ender's Game.
+        """
+        return text.format(**self.askData)
 
     def do_give(self):
         return "do give filler"
@@ -61,7 +77,7 @@ class Gurl:
         return "do date filler"
 
     def _boost_helper(self, base_boost):
-        self.exp += min(1, base_boost * pygame.player.boost_multiplier)
+        self.exp += min(1, base_boost * datingsim.player.boost_multiplier)
 
     def mini_boost(self):
         """boost from talking or giving a mediocre item"""
@@ -112,6 +128,29 @@ class Gurl:
                 return result
             else:
                 return data[best]
+
+class Kanaya(Gurl):
+    def __init__(self):
+        gurl_imgs = {}
+        gurl_imgs['askance'] = datingsim.assets.get_img_safe('GURL_kanaya_askance')
+        gurl_imgs['happy'] = gurl_imgs['default'] = datingsim.assets.get_img_safe('GURL_kanaya_smile')
+
+        talk_data = {}
+        talk_data[-1000] = "What the hell do you want?"
+        talk_data[0] = "And who do you think you are?"
+        talk_data[10] = "Hello."
+        talk_data[100] = ["How are you?", "How do you do?", "What's up?", "Nice seeing you again."]
+        talk_data[1000] = ["How are you?", "Nice seeing you again. (He's worth it!)"]
+
+        ask_data = {}
+        ask_data = {}
+        ask_data[-1000] = "I would like to kill you using a {weapon}"
+        ask_data[0] = "Do I even know you?"
+        ask_data[100] = ["My favorite color is green.", "I am {age} years of age.",
+                     "My favorite book is {book}.", "My waist diameter is {waist} cm.",
+                     "I weigh {weight} pounds.", "My favorite place is {place}."]
+        quiz_data = {}
+        Gurl.__init__(self, "Kanaya", gurl_imgs, talk_data, ask_data, quiz_data)
 
 
 

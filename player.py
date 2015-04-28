@@ -64,7 +64,7 @@ class Player():
 
     @property
     def boost_multiplier(self):
-        return (self.rom + self.per + 2*self.cha) / 30
+        return (self.rom + self.per + 2*self.cha) / 50
 
     def stats_dump(self):
         """Returns str describing all stats."""

@@ -1,7 +1,7 @@
 import datingsim, pygame
 from button import BlockButton
 from textbox import TextBox
-from gurl import Gurl
+from gurl import Gurl, Kanaya
 
 class MeetScene:
 
@@ -166,7 +166,9 @@ class MeetScene:
         gurl_imgs = {}
         gurl_imgs['askance'] = datingsim.assets.get_img_safe('GURL_kanaya_askance')
         gurl_imgs['happy'] = gurl_imgs['default'] = datingsim.assets.get_img_safe('GURL_kanaya_smile')
-        gurl = Gurl("Kanaya", gurl_imgs, None)
+        ask_data = None
+        quiz_data = None
+        gurl = Kanaya()
         gurl.exp = 3998
         d = MeetScene(gurl)
 
