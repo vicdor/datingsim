@@ -13,14 +13,18 @@ class Gurl:
         self.quiz_data = quiz_data or Gurl.default_quiz_data
         self.trivia = {}
         self.spoofs = {}
+        self.quiz_questions = {}
         self.exp = 0
         self.kissed = False
         self.gaff_count = 0
+        # temporary
+        self.trivia = {'book': "Ender's Game", 'waist': 42, 'color': 'green'};
 
-    def set_trivia(self, key, answer, spoofs):
+    def set_trivia(self, key, answer, spoofs, quiz_question):
         """Remember to call this after initializing ur Gurl."""
         self.trivia[key] = answer
         self.spoofs[key] = spoofs
+        self.quiz_questions[key] = quiz_question
 
 
     default_ask_data = {}
@@ -59,17 +63,7 @@ class Gurl:
     def do_ask(self, data=None):
         data = data or self.ask_data
         self.mini_boost()
-        return self.retrieve_response(self.exp, data).format(self.trivia)
-
-    trivia = {'book': "Ender's Game", 'waist': 42, 'color': 'green'};
-    def convert_ask_dialogue(self, text):
-        """
-        >>> print(Gurl.convert_ask_dialogue(Gurl, "My favorite color is {color}."))
-        My favorite color is green.
-        >>> print(Gurl.convert_ask_dialogue(Gurl, "My favorite book is {book}."))
-        My favorite book is Ender's Game.
-        """
-        return text.format(**self.askData)
+        return self.retrieve_response(self.exp, data).format(**self.trivia)
 
     def do_give(self):
         return "do give filler"
@@ -143,14 +137,42 @@ class Kanaya(Gurl):
         talk_data[1000] = ["How are you?", "Nice seeing you again. (He's worth it!)"]
 
         ask_data = {}
-        ask_data = {}
-        ask_data[-1000] = "I would like to kill you using a {weapon}"
-        ask_data[0] = "Do I even know you?"
-        ask_data[100] = ["My favorite color is green.", "I am {age} years of age.",
-                     "My favorite book is {book}.", "My waist diameter is {waist} cm.",
-                     "I weigh {weight} pounds.", "My favorite place is {place}."]
+        ask_data[0] = "Nice to meet you. I am Kanaya."
+        ask_data[100] = ["I am {height} cm tall.", "I am {age} years of age.",
+                         "My waist circumference is {waist} cm.",
+                         "My phone number is {phone}."]
         quiz_data = {}
         Gurl.__init__(self, "Kanaya", gurl_imgs, talk_data, ask_data, quiz_data)
+        self.set_trivia("height", 120, [121, 123, 124], "What is my height?")
+        self.set_trivia("age", 14, [12, 13, 15], "How old am I?")
+        self.set_trivia("waist", 40, [37, 50, 9001], "What are my waist measurements?")
+        self.set_trivia("phone", "236-1673", ["125-7234", "922-0117", "237-9115"],
+                        "What is my phone number?")
+
+class Isadora(Gurl):
+    def __init__(self):
+        gurl_imgs = {}
+        gurl_imgs['default'] = datingsim.assets.get_img_safe('GURL_isadora_default');
+
+        talk_data = {}
+        talk_data[-1000] = "What the hell do you want?"
+        talk_data[0] = "And who do you think you are?"
+        talk_data[10] = "Hello."
+        talk_data[100] = ["How are you?", "How do you do?", "What's up?", "Nice seeing you again."]
+        talk_data[1000] = ["How are you?", "Nice seeing you again. (He's worth it!)"]
+
+        ask_data = {}
+        ask_data[0] = "Nice to meet you. I am Isadora."
+        ask_data[100] = ["I am {height} cm tall.", "I am {age} years of age.",
+                         "My waist circumference is {waist} cm.",
+                         "My phone number is {phone}."]
+        quiz_data = {}
+        Gurl.__init__(self, "Kanaya", gurl_imgs, talk_data, ask_data, quiz_data)
+        self.set_trivia("height", 120, [121, 123, 124], "What is my height?")
+        self.set_trivia("age", 14, [12, 13, 15], "How old am I?")
+        self.set_trivia("waist", 40, [37, 50, 9001], "What are my waist measurements?")
+        self.set_trivia("phone", "236-1673", ["125-7234", "922-0117", "237-9115"],
+                        "What is my phone number?")
 
 
 

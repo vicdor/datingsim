@@ -501,7 +501,6 @@ def build_locs():
     add_loc("Arcade",
             [],
             key='arcade')
-
     return _dict
 
 

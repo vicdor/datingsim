@@ -30,8 +30,8 @@ class Assets():
                   ('BG_club', 'club.jpg', True),
 
                   ('GURL_kanaya_askance', 'kanaya_askance.png', False),
-                  ('GURL_kanaya_smile', 'kanaya_smile.png', False)
-
+                  ('GURL_kanaya_smile', 'kanaya_smile.png', False),
+                  ('GURL_isadora_default', 'isadora_default.jpg', False)
 
                 ]
         for key, file_name, force_fit in images:

@@ -1,7 +1,7 @@
 import datingsim, pygame
 from button import BlockButton
 from textbox import TextBox
-from gurl import Gurl, Kanaya
+from gurl import Gurl, Kanaya, Isadora
 
 class MeetScene:
 
@@ -55,7 +55,7 @@ class MeetScene:
                 if clicked_status[my_id]:
                     return
                 else:
-                    clicked_status[my_id] = True
+                    # clicked_status[my_id] = True
                     return on_first_click()
             return on_click
 
@@ -168,7 +168,7 @@ class MeetScene:
         gurl_imgs['happy'] = gurl_imgs['default'] = datingsim.assets.get_img_safe('GURL_kanaya_smile')
         ask_data = None
         quiz_data = None
-        gurl = Kanaya()
+        gurl = Isadora()
         gurl.exp = 3998
         d = MeetScene(gurl)
 
@@ -203,7 +203,7 @@ class MeetAdvisor(pygame.sprite.Sprite):
     def test_text():
         pygame.init()
         datingsim.init()
-        gurl = Gurl("Rudy", None, None)
+        gurl = Kanaya()
         gurl.exp = 2000
         m = MeetAdvisor(gurl)
         print(m.text)
