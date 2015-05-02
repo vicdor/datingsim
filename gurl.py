@@ -1,4 +1,5 @@
 import pygame, datingsim
+from shop import GiveDialogue
 import random
 
 
@@ -66,7 +67,15 @@ class Gurl:
         return self.retrieve_response(self.exp, data).format(**self.trivia)
 
     def do_give(self):
-        return "do give filler"
+        items = [datingsim.player.inventory.get(key)
+                 for key in ('potion', 'arrows', 'tractor')]
+        give = GiveDialogue(items)
+        give.main_loop()
+        if (give.item):
+            return "Thank you! I love this {}.".format(give.item.name)
+        else:
+            return "What? I thought you were going to give me a present."
+
     def do_date(self):
         return "do date filler"
 

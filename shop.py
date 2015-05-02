@@ -222,6 +222,32 @@ class CoolShop(ShopDialogue):
 
         ShopDialogue.__init__(self, popup_pos, items,
                               popup_bg_surf=popup_bg_surf)
+
+class GiveDialogue(CoolShop):
+    def __init__(self, items):
+        CoolShop.__init__(self, items)
+        self.item = None
+
+    def on_click_slot(self, n):
+        #print("slot {} was clicked.".format(n))
+        item = self.items[n]
+        p = datingsim.player
+        inv = p.inventory
+        if inv.can_rid(item):
+            inv.rid(item)
+            self.rid_success(item)
+        else:
+            self.rid_fail(item)
+    def rid_success(self, item):
+        """Okay, i'm sort of proud of this one"""
+        self.done = True
+        self.item = item
+        CoolDialogue("You gave an {}.".format(item.name)).main_loop();
+    def rid_fail(self, item):
+        CoolDialogue("You don't own an {}!".format(item.name)).main_loop();
+
+
+
 if __name__ == '__main__':
     ShopDialogue.test()
 

@@ -12,6 +12,7 @@ class Inventory:
 
     def add_new_item(self, name, key, cost, pic_key):
         self.items[key] = Item(name, key, cost, self, pic_key)
+        self.items[key].quantity = 1
 
     def get(self, key_or_item):
         """Returns the item associated with the given key or None"""
@@ -44,9 +45,24 @@ class Inventory:
         self.cash -= item.cost
         item.quantity += 1
 
-    def num_owned(item_or_key):
-        item = get(item_or_key)
+    def can_rid(self, item_or_key):
+        """Ok, now I regret making the inventory like this."""
+        item = self.get(item_or_key)
+        return item.quantity >= 1
+
+    def rid(self, item_or_key):
+        """Attempts to reduce item quantity by one."""
+        item = self.get(item_or_key)
+        if item.quantity <= 0:
+            raise RuntimeError("Cannot rid item: {} {}".format(item, item.quantity))
+        item.quantity -= 1
+
+    def num_owned(self, item_or_key):
+        item = self.get(item_or_key)
         return item.quantity
+
+    def has(self, item_or_key):
+        return self.num_owned(item_or_key) > 0
 
     def dump(self):
         """Makes a user readable info string about this inventory."""
