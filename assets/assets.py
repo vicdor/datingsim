@@ -31,8 +31,9 @@ class Assets():
 
                   ('GURL_kanaya_askance', 'kanaya_askance.png', False),
                   ('GURL_kanaya_smile', 'kanaya_smile.png', False),
-                  ('GURL_isadora_default', 'isadora_default.jpg', False)
+                  ('GURL_isadora_default', 'isadora_default.jpg', False),
 
+                  ('TILE_beach_east', 'beachicon1.jpg', False)
                 ]
         for key, file_name, force_fit in images:
             img = pygame.image.load('assets/'+file_name).convert()

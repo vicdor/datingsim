@@ -3,19 +3,6 @@ from inventory import Inventory
 from collections import namedtuple
 
 class Player():
-    name = "Anon"
-    day = 0
-    str = 1
-    dex = 1
-    spe = 1
-    pow = 1
-    mag = 1
-    cha = 1
-    rom = 1
-    per = 1
-    #cash = 0
-    hp = 100
-    max_hp = 100
 
     trainable_stats = {
         'str': 'strength',
@@ -28,6 +15,18 @@ class Player():
         'per': 'persuasion'}
 
     def __init__(self):
+        self.name = "Anon"
+        self.day = 0
+        self.str = 1
+        self.dex = 1
+        self.spe = 1
+        self.pow = 1
+        self.mag = 1
+        self.cha = 1
+        self.rom = 1
+        self.per = 1
+        self.hp = 100
+        self.max_hp = 100
         item_data = [
             ('potion', 'Elven Potion', 200),
             ('sash', 'Quicksilver Sash', 300),
