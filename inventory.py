@@ -84,7 +84,8 @@ class Item:
         self.key = key
         self.cost = cost
         self.inventory = inventory
-        self.pic = datingsim.assets.get_img(key)
+        self.pic_key = pic_key or "ITEM_" + key
+        self.pic = datingsim.assets.get_img(pic_key)
         self.quantity = 0
 
     def buy(self):
