@@ -356,8 +356,18 @@ def build_locs():
                 ).format(rom_inc)
     romance_data = ('Romance', do_romance, 'cost 20 hp')
 
-    relax_data = ('Relax', filler, 'lay low for a while')
-    river_date_data = ('Date', filler, 'meet some girls')
+    def initiate_meet():
+        """Choose three random gurls and run main_loop on InitiateMeet instance. \
+        then use <instance>.choice value to start up a MeetScene instance. \
+        After calling main_loop on MeetScene instance, either return to \
+        location or return to WorldMap depending on whether a date was \
+        initiated.
+        """
+        filler()
+
+
+    relax_data = ('Relax', initiate_meet, 'lay low for a while')
+    river_date_data = ('Date', initiate_meet, 'meet some girls')
     #casino skipped
     do_dark_city_work = make_work_fn(50, lambda p: p.str * 1.5)
     dark_city_work_data = ('Work', do_dark_city_work, 'wage = strength x 1.5')
