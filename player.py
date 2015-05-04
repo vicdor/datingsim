@@ -76,6 +76,8 @@ class Player():
                 #special hp/max_hp format
                 if e == 'hp':
                     dump += "hp: {}/{}\n".format(self.hp, self.max_hp)
+                elif e == 'cash':
+                    dump += "cash: ${}\n".format(self.inventory.cash)
                 else:
                     dump += "{}: {}\n".format(e, getattr(self, e))
             elif isinstance(e, tuple):
@@ -84,10 +86,3 @@ class Player():
             else:
                 raise Exception("invalid stat request: {}".format(e))
         return dump
-
-    #def inventory_dump(self):
-    #    dump = ""
-    #    for item, count in self.inventory.values():
-    #        dump += "{}: {}\n".format(item.name, count)
-    #    return dump
-

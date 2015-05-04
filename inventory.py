@@ -66,6 +66,10 @@ class Inventory:
 
     def dump(self):
         """Makes a user readable info string about this inventory."""
+        dump = ""
+        for item in self.items.values():
+            dump += "{}: {}\n".format(item.name, item.quantity)
+        return dump
 
     def __str__(self):
         return self.dump()

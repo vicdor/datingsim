@@ -115,7 +115,7 @@ class Location():
         LocButton2.containers = [all_sprites, buttons]
         dumby_fn = lambda: None
         def inventory_fn():
-            text = datingsim.player.inventory_dump()
+            text = datingsim.player.inventory.dump()
             d = CoolDialogue(text, snapshot=datingsim.snapshot())
             d.main_loop()
         def statistics_fn():
