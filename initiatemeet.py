@@ -16,14 +16,30 @@ class InitiateMeet(Scene):
             self.done = True
         self.buttons.add(BlockButton(finish, back_color, back_size, back_pos,
                                      text="Back", font=back_font))
-        self.panels = pygame.sprite.Group()
+        self.gurl_sprites = pygame.sprite.Group()
+        gurl_pos = [(100, 100), (300, 100), (500, 100)]
 
-        self.all_sprites.add(self.buttons, self.panels)
+        def make_gurl_sprite(gurl):
+            pos = gurl_pos.pop(0)
+            sprite = GurlSprite(gurl, pos)
+            self.gurl_sprites.add(sprite)
+
+        make_gurl_sprite(Kanaya())
+        make_gurl_sprite(Isadora())
+
+        self.all_sprites.add(self.buttons, self.gurl_sprites)
         self.main_surface = pygame.display.get_surface()
 
     @staticmethod
     def test():
         InitiateMeet([Isadora(), Kanaya()]).main_loop()
+
+class GurlSprite(pygame.sprite.Sprite):
+
+    def __init__(self, gurl, pos):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = gurl.default_img().copy()
+        self.rect = self.image.get_rect().move(pos)
 
 if __name__ == '__main__':
     pygame.init()

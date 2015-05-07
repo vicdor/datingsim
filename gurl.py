@@ -27,6 +27,9 @@ class Gurl:
         self.spoofs[key] = spoofs
         self.quiz_questions[key] = quiz_question
 
+    def default_img(self):
+        return self.img_dict['default']
+
 
     default_ask_data = {}
     default_quiz_data = {}
