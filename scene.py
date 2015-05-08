@@ -20,7 +20,7 @@ class Scene():
                         if button.rect.collidepoint(e.pos):
                             button.on_click()
             if self.bg_surf:
-                self.main_surface.blit(self.bg_img, (0, 0))
+                self.main_surface.blit(self.bg_surf, (0, 0))
             else:
                 self.main_surface.fill((0, 0, 0))
             self.all_sprites.update()

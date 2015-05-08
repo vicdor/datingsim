@@ -5,6 +5,8 @@ from dialogue import CoolDialogue
 from shop import CoolShop
 from datingsim import WIDTH, HEIGHT, RESOLUTION
 from button import BlockButton
+from gurl import Kanaya, Isadora
+from initiatemeet import InitiateMeet
 
 class LocButton(BlockButton):
     i = 0
@@ -363,7 +365,14 @@ def build_locs():
         location or return to WorldMap depending on whether a date was \
         initiated.
         """
-        filler()
+        gurls = [Kanaya(), Isadora()]
+        bg_surf = pygame.display.get_surface()
+        instance = InitiateMeet(gurls, bg_surf)
+        instance.main_loop()
+        if instance.choice == None:
+            pass
+        else:
+            print("should done")
 
 
     relax_data = ('Relax', initiate_meet, 'lay low for a while')

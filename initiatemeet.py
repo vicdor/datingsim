@@ -11,6 +11,7 @@ class InitiateMeet(Scene):
         self.gurls = gurls  # expect three
         self.bg_surf = bg_surf
         self.done = False
+        self.choice = None
 
         def finish():
             self.done = True
@@ -19,20 +20,28 @@ class InitiateMeet(Scene):
         self.gurl_sprites = pygame.sprite.Group()
         gurl_pos = [(100, 100), (300, 100), (500, 100)]
 
+        def make_choice(gurl):
+            self.done = True
+            self.choice = gurl
+
         def make_gurl_sprite(gurl):
             pos = gurl_pos.pop(0)
             sprite = GurlSprite(gurl, pos)
+            sprite.on_click = lambda: make_choice(gurl)
             self.gurl_sprites.add(sprite)
 
         make_gurl_sprite(Kanaya())
         make_gurl_sprite(Isadora())
 
+        self.buttons.add(self.gurl_sprites)
         self.all_sprites.add(self.buttons, self.gurl_sprites)
         self.main_surface = pygame.display.get_surface()
 
     @staticmethod
     def test():
-        InitiateMeet([Isadora(), Kanaya()]).main_loop()
+        instance = InitiateMeet([Isadora(), Kanaya()])
+        instance.main_loop()
+        print(instance.gurl_choice)
 
 class GurlSprite(pygame.sprite.Sprite):
 
