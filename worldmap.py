@@ -26,6 +26,7 @@ datingsim.init()
 pygame.display.set_caption("World Map")
 screen = pygame.display.get_surface()
 GAME_SIZE = GAME_WIDTH, GAME_HEIGHT = datingsim.RESOLUTION
+datingsim.player.inventory.cash = 1000
 def world_map():
     bg_img = datingsim.assets.get_img_safe('BG_island_map')
 
