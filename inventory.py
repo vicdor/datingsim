@@ -39,7 +39,7 @@ class Inventory:
 
     def buy(self, item_or_key):
         """Attempts to purchase item. If cannot, throws an Error."""
-        item = get(item_or_key)
+        item = self.get(item_or_key)
         if not self.can_buy(item):
             raise RuntimeError("Cannot purchase item: {}".format(item))
         self.cash -= item.cost

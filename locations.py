@@ -7,6 +7,7 @@ from datingsim import WIDTH, HEIGHT, RESOLUTION
 from button import BlockButton
 from gurl import Kanaya, Isadora
 from initiatemeet import InitiateMeet
+from meetscene import MeetScene
 
 class LocButton(BlockButton):
     i = 0
@@ -251,12 +252,12 @@ def build_locs():
     cash_text = "Not enough $$$!"
     def try_expend_cash(amount, auto_admonish=True):
         p = datingsim.player
-        if p.cash < amount:
+        if p.inventory.cash < amount:
             if auto_admonish:
                 show_dialogue(cash_text)
             return False
         else:
-            p.cash -= amount
+            p.inventory.cash -= amount
             return True
 
     def show_dialogue(text, **style):
@@ -372,7 +373,7 @@ def build_locs():
         if instance.choice == None:
             pass
         else:
-            print("should done")
+            MeetScene(instance.choice).main_loop()
 
 
     relax_data = ('Relax', initiate_meet, 'lay low for a while')
