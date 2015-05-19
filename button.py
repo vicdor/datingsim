@@ -20,7 +20,8 @@ class BlockButton(Button):
     def __init__(self, on_click, color, size=(30, 20), pos=(0,0), text=None,
                  font=None, font_color=(255,255,255), font_size=20):
         Button.__init__(self, pygame.Surface(size), on_click)
-        self.image.fill(color)
+        self.color = color
+        self.image.fill(self.color)
         if text:
             if not font:
                 font = pygame.font.Font(None, font_size)
@@ -32,6 +33,7 @@ class BlockButton(Button):
     def clear_text(self):
         self.image.fill(self.color)
     def make_text(self, text, font_color=None, font=None):
+        self.clear_text()
         center_text(text, font or self.font,
                     font_color or self.font_color,
                     self.image.get_rect(),
