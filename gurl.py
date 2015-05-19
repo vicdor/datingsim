@@ -25,6 +25,12 @@ class Gurl:
         self.spoofs[key] = spoofs
         self.quiz_questions[key] = quiz_question
 
+    def get_randomized_trivia_keys(self):
+        result = [x for x in self.trivia.keys()]
+        random.shuffle(result)
+        return result
+
+
     def default_img(self):
         return self.img_dict['default']
 
