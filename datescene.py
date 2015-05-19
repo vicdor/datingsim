@@ -4,10 +4,11 @@ from textbox import TextBox
 from button import BlockButton
 from dialogue import CoolDialogue
 from scene import Scene
+from shop import GiveDialogue
 
 class DateScene(Scene):
 
-    def __init__(self, gurl, bg_img=None, font_name=None, gurl_img_pos=(100,100),
+    def __init__(self, gurl, init_hearts=10, bg_img=None, font_name=None, gurl_img_pos=(100,100),
                  gurl_talk_pos=(20, 100), gurl_talk_size=(500, 130),
                  gurl_talk_color=(180,70,70), gurl_talk_font_color=(255,255,255)
                  ):
@@ -18,16 +19,19 @@ class DateScene(Scene):
         self.show_menu_buttons = True
         self.show_heart_meter = True
         self.show_gurl_textbox = True
-        self.show_quiz_buttons = True
+        self.show_quiz_buttons = False
 
         self.remaining_trivia_keys = gurl.get_randomized_trivia_keys()
+        self.compliment_count = 0
+        self.gift_count = 0
+        self.photo_count = 0
+        self.fail_kiss_count = 0
 
         self.gurl = gurl
-
         self.gurl_img_pos = gurl_img_pos
         self.mood = "default"
-
         self.heart_meter = HeartMeter()
+        self.update_heart_meter(init_hearts)
 
         self.gurl_textbox = TextBox("gurl talk filler", gurl_talk_pos, gurl_talk_size,
             font=None, bg_color=gurl_talk_color, font_color=gurl_talk_font_color)
@@ -63,13 +67,10 @@ class DateScene(Scene):
             pos = quiz_posses.pop(0)
             button = BlockButton(on_click, color, size, pos, name, self.font_name)
             self.quiz_buttons.add(button)
-        make_quiz_button("Hello there", self.select_quiz_A)
-        make_quiz_button("100 cm", None)
-        make_quiz_button("20 cm", None)
-        make_quiz_button("10 cm", None)
-
-        self.update_heart_meter(10)
-        self.open_quiz()
+        make_quiz_button("filler A", None)
+        make_quiz_button("filler B", None)
+        make_quiz_button("filler C", None)
+        make_quiz_button("filler D", None)
 
     def open_quiz(self, key=None):
         self.show_quiz_buttons = True
@@ -81,7 +82,7 @@ class DateScene(Scene):
         answer = self.gurl.trivia[key]
         spoofs = self.gurl.spoofs[key][:]
         index_correct = random.randint(0, 3)
-        print(key, question, answer, spoofs, index_correct)
+        self.update_conversation(question)
         for i, button in enumerate(self.quiz_buttons):
             if i == index_correct:
                 text = answer
@@ -93,31 +94,75 @@ class DateScene(Scene):
 
     def on_correct_answer(self):
         self.update_conversation("That is correct!")
+        self.little_boost()
         self.close_quiz()
     def on_wrong_answer(self):
         self.update_conversation("Why don't you ever listen to me")
+        self.little_gaffe()
         self.close_quiz()
     def close_quiz(self):
         self.show_quiz_buttons = False
         self.show_menu_buttons = True
 
     def select_talk(self):
-        pass
+        if len(self.remaining_trivia_keys) == 0:
+            self.update_conversation("I'm tired of talking...")
+        else:
+            self.open_quiz()
 
     def select_compliment(self):
-        pass
+        if self.compliment_count >= 2:
+            self.update_conversation("Can we do something else?")
+            self.little_gaffe()
+        else:
+            self.update_conversation("Thank you!")
+            self.little_boost()
+        self.compliment_count += 1
 
     def select_gift(self):
-        pass
+        if self.gift_count >= 2:
+            self.update_conversation("Can we do something else?")
+            self.little_gaffe()
+        else:
+            items = [datingsim.player.inventory.get(key)
+                for key in ('potion', 'arrows', 'tractor')]
+            give = GiveDialogue(items)
+            give.main_loop()
+            if (give.item):
+                self.update_conversation(
+                    "Wow! You shouldn't have gotten me this {}".format(give.item.name))
+                self.big_boost()
+            else:
+                self.update_conversation("What...?")
+        self.gift_count += 1
+
 
     def select_photo(self):
-        pass
+        if self.photo_count >= 5:
+            self.update_conversation("Could you just stop asking?")
+            self.big_gaffe()
+        elif self.photo_count >= 1:
+            self.update_conversation("Didn't we already take a photo?")
+            self.little_gaffe()
+        else:
+            self.update_conversation("Okay! Let's do that.")
+            self.little_boost()
+        self.photo_count += 1
 
     def select_kiss(self):
-        pass
-
-    def select_quiz_A(self):
-        pass
+        if self.percentage == 100:
+            if self.fail_kiss_count == 0:
+                self.update_conversation("smooch")
+                self.gurl.kissed = True
+                # update status
+        else:
+            if self.fail_kiss_count == 0:
+                self.update_conversation("Errr... I don't really want to.")
+                self.little_gaffe()
+            else:
+                self.update_conversation("Errr... I don't really want to.")
+                self.big_gaffe()
+            self.fail_kiss_count
 
     def get_gurl_img(self):
         if self.mood in self.gurl.img_dict:
@@ -142,6 +187,23 @@ class DateScene(Scene):
         self.heart_meter.textbox.text = "{}%".format(percentage)
         self.heart_meter.textbox.render()
         print("ba-dump! {}%".format(percentage))
+
+    def increase_hearts(self, increaseby):
+        percentage = self.percentage + increaseby
+        if percentage < 0:
+            percentage = 0
+        elif percentage >= 100:
+            percentage = 100
+        self.update_heart_meter(percentage)
+
+    def little_boost(self):
+        self.increase_hearts(3)
+    def big_boost(self):
+        self.increase_hearts(8)
+    def little_gaffe(self):
+        self.increase_hearts(-5)
+    def big_gaffe(self):
+        self.increase_hearts(-8)
 
     def main_loop(self):
         while not self.done:
