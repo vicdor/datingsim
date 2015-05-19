@@ -18,8 +18,6 @@ class Gurl:
         self.exp = 0
         self.kissed = False
         self.gaff_count = 0
-        # temporary
-        self.trivia = {'book': "Ender's Game", 'waist': 42, 'color': 'green'};
 
     def set_trivia(self, key, answer, spoofs, quiz_question):
         """Remember to call this after initializing ur Gurl."""
