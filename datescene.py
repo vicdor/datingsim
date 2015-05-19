@@ -8,7 +8,7 @@ from scene import Scene
 class DateScene(Scene):
 
     def __init__(self, gurl, bg_img=None, font_name=None, gurl_img_pos=(100,100),
-                 gurl_talk_pos=(20, 100), gurl_talk_size=(500, 230),
+                 gurl_talk_pos=(20, 100), gurl_talk_size=(500, 130),
                  gurl_talk_color=(180,70,70), gurl_talk_font_color=(255,255,255)
                  ):
         Scene.__init__(self)
@@ -17,7 +17,7 @@ class DateScene(Scene):
 
         self.show_menu_buttons = True
         self.show_heart_meter = True
-        self.show_gurl_textbox = False
+        self.show_gurl_textbox = True
         self.show_quiz_buttons = True
 
         self.remaining_trivia_keys = gurl.get_randomized_trivia_keys()
@@ -72,24 +72,34 @@ class DateScene(Scene):
         self.open_quiz()
 
     def open_quiz(self, key=None):
+        self.show_quiz_buttons = True
+        self.show_menu_buttons = False
+        self.show_gurl_textbox = True
+        self.show_heart_meter = True
         key = key or self.remaining_trivia_keys.pop(0)
         question = self.gurl.quiz_questions[key]
         answer = self.gurl.trivia[key]
         spoofs = self.gurl.spoofs[key][:]
         index_correct = random.randint(0, 3)
         print(key, question, answer, spoofs, index_correct)
-        def choose_faulty():
-            print("wrong!")
-        def choose_correct():
-            print("correct!")
         for i, button in enumerate(self.quiz_buttons):
             if i == index_correct:
                 text = answer
-                button.on_click = choose_correct
+                button.on_click = self.on_correct_answer
             else:
                 text = spoofs.pop(0)
-                button.on_click = choose_faulty
+                button.on_click = self.on_wrong_answer
             button.make_text(str(text))
+
+    def on_correct_answer(self):
+        self.update_conversation("That is correct!")
+        self.close_quiz()
+    def on_wrong_answer(self):
+        self.update_conversation("Why don't you ever listen to me")
+        self.close_quiz()
+    def close_quiz(self):
+        self.show_quiz_buttons = False
+        self.show_menu_buttons = True
 
     def select_talk(self):
         pass
