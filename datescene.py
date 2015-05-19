@@ -144,28 +144,28 @@ class DateScene(Scene):
         print("ba-dump! {}%".format(percentage))
 
     def main_loop(self):
-        self.all_sprites.empty()
-        self.buttons.empty()
-
-        #self.all_sprites.add(self.gurl_sprite)
-
-        if self.show_menu_buttons:
-            self.all_sprites.add(self.menu_buttons)
-            self.buttons.add(self.menu_buttons)
-
-        if self.show_heart_meter:
-            self.all_sprites.add(self.heart_meter)
-
-        if self.show_gurl_textbox:
-            self.all_sprites.add(self.gurl_textbox)
-
-        if self.show_quiz_buttons:
-            self.all_sprites.add(self.quiz_buttons)
-            self.buttons.add(self.quiz_buttons)
-
-        self.main_surface.blit(self.get_gurl_img(), self.gurl_img_pos)
-
         while not self.done:
+            self.all_sprites.empty()
+            self.buttons.empty()
+
+            #self.all_sprites.add(self.gurl_sprite)
+
+            if self.show_menu_buttons:
+                self.all_sprites.add(self.menu_buttons)
+                self.buttons.add(self.menu_buttons)
+
+            if self.show_heart_meter:
+                self.all_sprites.add(self.heart_meter)
+
+            if self.show_gurl_textbox:
+                self.all_sprites.add(self.gurl_textbox)
+
+            if self.show_quiz_buttons:
+                self.all_sprites.add(self.quiz_buttons)
+                self.buttons.add(self.quiz_buttons)
+
+            self.main_surface.blit(self.get_gurl_img(), self.gurl_img_pos)
+
             for event in pygame.event.get():
                 if event.type is pygame.QUIT:
                     datingsim.quit()
