@@ -16,6 +16,7 @@ class Assets():
 
     imgs = {}
     msks = {}
+    fonts = {}
 
     def __init__(self):
         self._dict = {}
@@ -49,6 +50,16 @@ class Assets():
             Assets.msk = pygame.mixer.Sound('assets/' + file_name)
             self.msks[key] = file_name
 
+
+        font_data = [
+                     ('retro', 'LoW-Font.ttf', 32),
+                     ('retro_large', 'LoW-Font.ttf', 64),
+                     ('retro_small', 'LoW-Font.ttf', 16)
+                     ]
+        for key, file_name, size in font_data:
+            self.fonts[key] = pygame.font.Font('assets/'+file_name, size)
+        self.fonts['default'] = self.fonts['retro']
+
     #quick hack for use_fillers
     def get_img_safe(self, item):
         imgs = Assets.imgs
@@ -60,6 +71,18 @@ class Assets():
         return imgs[item]
 
     get_img = get_img_safe
+
+    def get_font_safe(self, name):
+        if font not in self.fonts and self.use_fillers:
+            return self.get_default_font()
+        else:
+            return self.get_font(name)
+
+    def get_font(self, name):
+        return self.fonts[name]
+
+    def get_default_font(self):
+        return self.get_font('default')
 
     '''
     def get(self, item):

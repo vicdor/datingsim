@@ -1,4 +1,5 @@
 import pygame
+import datingsim
 
 
 class TextBox(pygame.sprite.Sprite):
@@ -11,7 +12,7 @@ class TextBox(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self, self.containers)
         self.text = text
         self.rect = pygame.Rect(pos, size)
-        self.font = font or pygame.font.Font(None, font_size)
+        self.font = font or datingsim.assets.get_default_font()
         self.font_color = font_color
         self.font_size = font_size
         self.bg_color = bg_color

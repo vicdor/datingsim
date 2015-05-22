@@ -1,4 +1,5 @@
 import pygame
+import datingsim
 
 def center_text(text, font, font_color, rect, surf):
     """blits the text into the center of rect on surf"""
@@ -24,10 +25,10 @@ class BlockButton(Button):
         self.image.fill(self.color)
         if text:
             if not font:
-                font = pygame.font.Font(None, font_size)
-                self.font = font
-                self.font_color = font_color
-                self.make_text(text)
+                font = datingsim.assets.get_default_font()
+            self.font = font
+            self.font_color = font_color
+            self.make_text(text)
         self.rect = self.image.get_rect().move(pos)
 
     def clear_text(self):

@@ -8,13 +8,13 @@ from shop import GiveDialogue
 
 class DateScene(Scene):
 
-    def __init__(self, gurl, init_hearts=10, bg_img=None, font_name=None, gurl_img_pos=(100,100),
+    def __init__(self, gurl, init_hearts=10, bg_img=None, font=None, gurl_img_pos=(100,100),
                  gurl_talk_pos=(20, 100), gurl_talk_size=(500, 130),
                  gurl_talk_color=(180,70,70), gurl_talk_font_color=(255,255,255)
                  ):
         Scene.__init__(self)
         self.bg_img = bg_img
-        self.font_name = font_name
+        self.font = font or datingsim.assets.get_default_font()
 
         self.show_menu_buttons = True
         self.show_heart_meter = True
@@ -45,7 +45,7 @@ class DateScene(Scene):
             menu_y = menu_y + spacing[1]
             pos = (menu_x, menu_y)
             button = BlockButton(on_click, color, size, pos, name,
-                self.font_name)
+                self.font)
             self.menu_buttons.add(button)
         make_menu_button("talk", self.select_talk)
         make_menu_button("compliment", self.select_compliment)
@@ -65,7 +65,7 @@ class DateScene(Scene):
         ]
         def make_quiz_button(name, on_click, size=quiz_size, color=(140,60,60)):
             pos = quiz_posses.pop(0)
-            button = BlockButton(on_click, color, size, pos, name, self.font_name)
+            button = BlockButton(on_click, color, size, pos, name, self.font)
             self.quiz_buttons.add(button)
         make_quiz_button("filler A", None)
         make_quiz_button("filler B", None)
