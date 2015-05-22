@@ -52,9 +52,12 @@ class Assets():
 
 
         font_data = [
-                     ('retro', 'LoW-Font.ttf', 32),
-                     ('retro_large', 'LoW-Font.ttf', 64),
-                     ('retro_small', 'LoW-Font.ttf', 16)
+                     ('retro', 'low_font/LoW-Font.ttf', 32),
+                     ('retro_large', 'low_font/LoW-Font.ttf', 64),
+                     ('retro_small', 'low_font/LoW-Font.ttf', 16),
+                     ('kawaii', 'Kawaii-Desu/Kawaii-Desu.ttf', 32),
+                     ('kawaii_large', 'Kawaii-Desu/Kawaii-Desu.ttf', 64),
+                     ('kawaii_small', 'Kawaii-Desu/Kawaii-Desu.ttf', 16)
                      ]
         for key, file_name, size in font_data:
             self.fonts[key] = pygame.font.Font('assets/'+file_name, size)
