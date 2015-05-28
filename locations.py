@@ -329,10 +329,6 @@ def build_locs():
         show_dialogue(text)
     sun_bathe_data = ('Sun Bathe', do_sun_bathe, 'train persuasion')
 
-    def do_club_date():
-        text = ("Here is the filler for dating.")
-        show_dialogue(text)
-    club_date_data = ('Date', do_club_date, 'meet some girls')
 
     def do_drink():
         if not try_expend_hp(20) or not try_expend_cash(20):
@@ -378,6 +374,7 @@ def build_locs():
 
     relax_data = ('Relax', initiate_meet, 'lay low for a while')
     river_date_data = ('Date', initiate_meet, 'meet some girls')
+    club_date_data = ('Date', initiate_meet, 'meet some girls')
     #casino skipped
     do_dark_city_work = make_work_fn(50, lambda p: p.str * 1.5)
     dark_city_work_data = ('Work', do_dark_city_work, 'wage = strength x 1.5')
