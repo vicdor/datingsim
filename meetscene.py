@@ -2,11 +2,12 @@ import datingsim, pygame
 from button import BlockButton
 from textbox import TextBox
 from gurl import Gurl, Kanaya, Isadora
+from datechoose import DateChoose
 
 class MeetScene:
 
     def __init__(self, gurl, bg_img=None, gurl_img_pos=(300, 300), textPos=(0,400),
-                 textSize=(130,180), use_default_buttons=True):
+                 textSize=(180,280), use_default_buttons=True):
         self.gurl = gurl
         self.bg_img = bg_img
         self.gurl_img_pos = gurl_img_pos
@@ -69,8 +70,17 @@ class MeetScene:
         msg = self.gurl.do_ask()
         self.update_conversation(msg)
     def select_date(self):
-        msg = self.gurl.do_date()
-        self.update_conversation(msg)
+        """This is a special case, because do_date() will either return a message to be shown, \
+            or return an instance of datechoose. """
+        result = self.gurl.do_date()
+        if isinstance(result, str):
+            self.update_conversation(result)
+        elif isinstance(result, DateChoose):
+            msg = "Wow, I sure will be excited to go to the {} when that feature \
+                is implemented!".format(result.loc_name)
+            self.update_conversation(msg)
+        else:
+            raise Error("Invalid result {} from gurl.do_date()!".format(result))
     def select_give(self):
         msg = self.gurl.do_give()
         self.update_conversation(msg)

@@ -1,5 +1,6 @@
 import pygame, datingsim
 from shop import GiveDialogue
+from datechoose import DateChoose
 import random
 
 
@@ -45,7 +46,8 @@ class Gurl:
     def get_relationship_name(lvl):
         return Gurl.relationship_names[lvl]
 
-    def calc_rel_level(self):
+    @property
+    def rel_level(self):
         exp = self.exp
         if exp < 1500:
             #so acquaintance can be earned with exp > 500
@@ -60,7 +62,7 @@ class Gurl:
 
     @property
     def rel_name(self):
-        level = self.calc_rel_level()
+        level = self.rel_level
         return Gurl.get_relationship_name(level)
 
     def do_talk(self, data=None):
@@ -84,7 +86,16 @@ class Gurl:
             return "What? I thought you were going to give me a present."
 
     def do_date(self):
-        return "do date filler"
+        if self.rel_level < 0:
+            return "I only my closest friends."
+        else:
+            instance = DateChoose(bg_img=datingsim.snapshot())
+            instance.main_loop()
+            if instance.success:
+                return instance
+            else:
+                """The player changed his mind and pressed cancel."""
+                return "What?"
 
     def _boost_helper(self, base_boost):
         self.exp += min(1, base_boost * datingsim.player.boost_multiplier)
