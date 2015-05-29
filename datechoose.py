@@ -21,17 +21,17 @@ class DateChoose():
         tileStartX, tileStartY = 10, 0
         positions = ([[tileStartX + i*Tile.SIZE_X, tileStartY] for i in range(3)] +
             [[tileStartX + i*Tile.SIZE_X, tileStartY + Tile.SIZE_Y] for i in range(3)])
-        def make_tile(name, cost, img_key):
+        def make_tile(name, cost, img_key, loc_key):
             pos = positions.pop(0)
-            tile = Tile(name, cost, img_key, pos)
+            tile = Tile(name, cost, img_key, loc_key, pos)
             self.tiles.add(tile)
             def on_click():
                 print("You clicked on {}".format(tile.name))
-                """Visit this place, if possible. Deduct cash accordingly."""
-                if (datingsim.player.inventory.cash >= tile.cost):
-                    pass
-                else:
-                    pass
+                self.done = True
+                self.success = True
+                self.loc_name = tile.name
+                self.cost = tile.cost
+                self.loc_key = tile.loc_key
             def on_hover():
                 self.changeText("{} -- cost: {} gold".format(name, cost))
             def on_unhover():
@@ -39,11 +39,12 @@ class DateChoose():
             tile.on_click = on_click
             tile.on_hover = on_hover
             tile.on_unhover = on_unhover
-        make_tile("Beach of the East", 500, "TILE_beach_east")
-        make_tile("Beach of the West", 500, "TILE_beach_west")
-        make_tile("Arcade", 1000, "TILE_arcade")
-        make_tile("Hot Springs", 2000, "TILE_springs")
+        make_tile("Beach of the East", 500, "TILE_beach_east", "beach_east")
+        make_tile("Beach of the West", 500, "TILE_beach_west", "beach_west")
+        make_tile("Arcade", 1000, "TILE_arcade", "arcade")
+        make_tile("Hot Springs", 2000, "TILE_springs", "springs")
 
+        # TODO: make a cancel button
 
         self.textbox = TextBox("", textbox_pos, textbox_size, frame_color=(230, 40, 0))
         # TODO: note that frame_color here isn't doing anything.
@@ -55,6 +56,7 @@ class DateChoose():
         self.main_surface = pygame.display.get_surface()
         self.done = False
         self.curr_tile = None
+        self.success = False  # whether a choice was made
 
     def changeText(self, text):
         """render changed text if necessary"""
@@ -69,9 +71,6 @@ class DateChoose():
                     pygame.quit()
                     datingsim.quit()
                     quit()
-                    if e.type is pygame.MOUSEBUTTONDOWN:
-                        # detect button collisions here
-                        pass
                 elif e.type is pygame.MOUSEMOTION:
                     for tile in self.tiles:
                         if tile.rect.collidepoint(e.pos):
@@ -102,14 +101,21 @@ class DateChoose():
     def test():
         instance = DateChoose()
         instance.main_loop()
+        if instance.success:
+            print("You chose {}.".format(instance.loc_name))
+            print("The location key of your choice is {}.".format(instance.loc_key))
+            print("The cost of this location is {}.".format(instance.cost))
+        else:
+            print("No choice of location was made.")
 
 class Tile(pygame.sprite.Sprite):
     """Psuedo-button"""
     SIZE_X, SIZE_Y = SIZE = 260, 275
-    def __init__(self, name, cost, img_key, pos):
+    def __init__(self, name, cost, img_key, loc_key, pos):
         pygame.sprite.Sprite.__init__(self)
         self.name = name
         self.cost = cost
+        self.loc_key = loc_key
         self.image = datingsim.assets.get_img_safe(img_key)
         self.rect = pygame.Rect(pos, Tile.SIZE)
 
