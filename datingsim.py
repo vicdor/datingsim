@@ -1,4 +1,11 @@
 WIDTH, HEIGHT = RESOLUTION = 800, 600
+COLOR_A = (30, 130, 200)
+COLOR_B = (70, 180, 30)
+COLOR_C = (120, 230, 120)  # homebrewish
+COLOR_D = (0, 128, 128)  # teal
+COLOR_E = (107, 142, 35)  # olive drab
+COLOR_F = (160, 82, 45)  # sienna
+COLOR_G = (255, 69, 0)  # orange red
 import pygame
 import locations
 from player import Player
