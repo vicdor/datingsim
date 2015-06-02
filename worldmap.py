@@ -1,5 +1,5 @@
 import pygame, pygame.gfxdraw, pygame.transform
-from dreambutton import DreamButton
+from dreambutton import DreamButton, DreamMap
 import datingsim
 
 class MapButton(DreamButton):
@@ -21,78 +21,85 @@ def center_text(text, font, font_color, rect, surf):
     y = (H - h) / 2
     surf.blit(t_surf, [x, y])
 
-pygame.init()
-datingsim.init()
-pygame.display.set_caption("World Map")
-screen = pygame.display.get_surface()
-GAME_SIZE = GAME_WIDTH, GAME_HEIGHT = datingsim.RESOLUTION
-datingsim.player.inventory.cash = 1000
-def world_map():
-    bg_img = datingsim.assets.get_img_safe('BG_island_map')
+class WorldMap():
+    def __init__(self):
+        self.bg_img = datingsim.assets.get_img_safe('BG_island_map')
 
-    font = pygame.font.Font(None, 50)
-    font_color = (125, 200, 128)
-    name_rect = pygame.Rect(0, GAME_HEIGHT-100, GAME_WIDTH, 100)
-    hover_text = None
+        self.font = pygame.font.Font(None, 50)
+        self.font_color = (125, 200, 128)
+        self.name_rect = pygame.Rect(0, datingsim.HEIGHT-100, datingsim.WIDTH, 100)
+        self.hover_text = None
+        self.main_surface = pygame.display.get_surface()
 
+        self.dream_map = DreamMap()
+        self.buttons = []
+        button_data = (('club', [187, 408]),
+                    ('castle', [665, 213]),
+                    ('woods', [185, 355]),
+                    ('river', [211, 262]),
+                    ('beach_west', [121, 268]),
+                    ('beach_east', [575, 360]),
+                    ('mountain', [354, 269]),
+                    ('springs', [426, 308]),
+                    ('gym', [145, 214]),
+                    ('valley', [254, 209]),
+                    ('inn', [495, 373]),
+                    ('village', [353, 194]),
+                    ('clinic', [531, 225]),
+                    ('city', [-20, -20]),
+                    ('arcade', [0, 0])
+                    )
+        for key, pos in button_data:
+            loc = datingsim.locs[key]
+            m = MapButton(pos, loc)
+            self.dream_map.add_dreambutton(m)
+            self.buttons.append(m)
+        #m = MapButton([50, 50], lambda: print("up next"), "WOWZAAST")
+        #buttons.append(m)
 
-    DreamButton.reset()
-    buttons = []
-    button_data = (('club', [187, 408]),
-                   ('castle', [665, 213]),
-                   ('woods', [185, 355]),
-                   ('river', [211, 262]),
-                   ('beach_west', [121, 268]),
-                   ('beach_east', [575, 360]),
-                   ('mountain', [354, 269]),
-                   ('springs', [426, 308]),
-                   ('gym', [145, 214]),
-                   ('valley', [254, 209]),
-                   ('inn', [495, 373]),
-                   ('village', [353, 194]),
-                   ('clinic', [531, 225]),
-                   ('city', [-20, -20]),
-                   ('arcade', [0, 0])
-                   )
-    for key, pos in button_data:
-        loc = datingsim.locs[key]
-        m = MapButton(pos, loc)
-        buttons.append(m)
-    #m = MapButton([50, 50], lambda: print("up next"), "WOWZAAST")
-    #buttons.append(m)
+    def main_loop(self):
+        self.done = False
+        while not self.done:
+            for e in pygame.event.get():
+                if e.type is pygame.QUIT:
+                    self.done = True
+                elif e.type is pygame.MOUSEBUTTONDOWN:
+                    dream = self.dream_map.get_at(e.pos)
+                    if dream:
+                        click_result = dream.on_click()
+                        if click_result:
+                            self.done = True
+                elif e.type is pygame.MOUSEMOTION:
+                    dream = self.dream_map.get_at(e.pos)
+                    #print(e.pos, DreamButton.ghost_surf.get_at(pos)[0])
+                    if dream:
+                        hover_text = dream.on_hover()
+                    else:
+                        hover_text = None
 
-    done = False
-    while not done:
-        for e in pygame.event.get():
-            if e.type is pygame.QUIT:
-                done = True
-            elif e.type is pygame.MOUSEBUTTONDOWN:
-                dream = DreamButton.get_at(e.pos)
-                print(e.pos)
-                if dream:
-                    click_result = dream.on_click()
-                    if click_result:
-                        done = True
-            elif e.type is pygame.MOUSEMOTION:
-                dream = DreamButton.get_at(e.pos)
-                #print(e.pos, DreamButton.ghost_surf.get_at(pos)[0])
-                if dream:
-                    hover_text = dream.on_hover()
-                else:
-                    hover_text = None
+            self.main_surface.blit(self.bg_img, [0,0])
+            for b in self.buttons:
+                b.update()
+                b.draw(self.main_surface)
+            if hover_text:
+                center_text(hover_text, self.font, self.font_color, self.name_rect,
+                            self.main_surface)
+            pygame.time.wait(1000//15)
+            pygame.display.flip()
+        self.ath()
 
-        screen.blit(bg_img, [0,0])
-        for b in buttons:
-            b.update()
-            b.draw(screen)
-        if hover_text:
-            center_text(hover_text, font, font_color, name_rect, screen)
-        pygame.time.wait(1000//15)
-        pygame.display.flip()
+    def ath(self):
+        pass
 
-world_map()
+    @staticmethod
+    def test():
+        pygame.init()
+        datingsim.init()
+        pygame.display.set_caption("World Map")
+        GAME_SIZE = GAME_WIDTH, GAME_HEIGHT = datingsim.RESOLUTION
+        datingsim.player.inventory.cash = 1000
+        instance = WorldMap()
+        instance.main_loop()
 
-
-
-
-
+if __name__ == '__main__':
+    WorldMap.test()

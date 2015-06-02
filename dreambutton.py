@@ -9,40 +9,48 @@ class Dream():
     def draw(self, surf):
         pass
 
-class DreamButton(Dream):
-    next_id = 1
-    button_map = {}
-    ghost_surf = None
+class DreamMap():
+    def __init__(self):
+        self.next_id = 1
+        self.button_map = {}
+        self.ghost_surf = None
 
-    def __init__(self, draw_fn, on_click=lambda:None):
-        """draw_fn takes arguments (surf, color=None)"""
-        if not DreamButton.ghost_surf:
-            W, H = datingsim.RESOLUTION
-            DreamButton.ghost_surf = pygame.Surface([W, H])
-        D = DreamButton
-        id = D.next_id
-        D.button_map[id] = self
-        D.next_id += 1
-        id_color = (id, 0, 0)
-        draw_fn(D.ghost_surf, color=id_color)
-        self.draw = draw_fn
-        self.on_click = on_click
-
-    @staticmethod
-    def get_at(pos):
-        D = DreamButton
+    def get_at(self, pos):
+        D = self
         id = D.ghost_surf.get_at(pos)[0]
         if id in D.button_map:
             return D.button_map[id]
         else:
             return None
 
-    @staticmethod
-    def reset():
-        D = DreamButton
+    def reset(self):
+        D = self
         D.ghost_surf = None
         D.next_id = 1
         D.buttons_map = {}
+
+    def add_dreambutton(self, button):
+        if not self.ghost_surf:
+            W, H = datingsim.RESOLUTION
+            self.ghost_surf = pygame.Surface([W, H])
+        id = self.next_id
+        self.button_map[id] = button
+        self.next_id += 1
+        id_color = (id, 0, 0)
+        button.draw(self.ghost_surf, color=id_color)
+
+class DreamButton(Dream):
+    next_id = 1
+    ghost_surf = None
+
+    def __init__(self, draw_fn, on_click=lambda:None, on_hover=lambda:None):
+        """draw_fn takes arguments (surf, color=None)"""
+        if not DreamButton.ghost_surf:
+            W, H = datingsim.RESOLUTION
+            DreamButton.ghost_surf = pygame.Surface([W, H])
+        self.draw = draw_fn
+        self.on_click = on_click
+        self.on_hover = on_hover
 
 
 class EllipseButton(DreamButton):
@@ -64,13 +72,15 @@ class EllipseButton(DreamButton):
 
         # populate screen with ellipses
         dreams = []
+        dream_map = DreamMap()
         for _ in range(1):
             pos = random.uniform(0, GAME_WIDTH), random.uniform(0, GAME_HEIGHT)
             size = 20, 40
             color = (255, 20, 20)
-            on_click = lambda: print("self.id")
+            on_click = lambda: print("id")
             ellipse = EllipseButton(pos, size, on_click, color)
             dreams.append(ellipse)
+            dream_map.add_dreambutton(ellipse)
 
             ellipse.on_hover = lambda: print("heheheh found YOU")
 
@@ -81,11 +91,11 @@ class EllipseButton(DreamButton):
                 if e.type is pygame.QUIT:
                     done = True
                 elif e.type is pygame.MOUSEBUTTONDOWN:
-                    dreambutton = DreamButton.get_at(e.pos)
+                    dreambutton = dream_map.get_at(e.pos)
                     if dreambutton:
                         dreambutton.on_click()
                 elif e.type is pygame.MOUSEMOTION:
-                    dreambutton = DreamButton.get_at(e.pos)
+                    dreambutton = dream_map.get_at(e.pos)
                     if dreambutton:
                         dreambutton.on_hover()
             for dream in dreams:
