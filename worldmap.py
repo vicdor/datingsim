@@ -65,7 +65,7 @@ class WorldMap():
 
     def main_loop(self):
         self.done = False
-        while not self.done: # and not kitchen.stop_request:
+        while not self.done and not kitchen.stop_request:
             for e in pygame.event.get():
                 if e.type is pygame.QUIT:
                     kitchen.finish()

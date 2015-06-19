@@ -37,6 +37,9 @@ def quit():
     inited = False
     del player
 
+def snapshot():
+    return pygame.display.get_surface().copy()
+
 def checkinit():
     if not inited:
         raise Error("Game not yet inited!")
