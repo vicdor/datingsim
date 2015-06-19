@@ -3,6 +3,7 @@ from button import BlockButton
 from textbox import TextBox
 from gurl import Gurl, Kanaya, Isadora
 from datechoose import DateChoose
+from datescene import DateScene
 
 class MeetScene:
 
@@ -39,6 +40,8 @@ class MeetScene:
 
         # make an exit button
         def on_exit_click():
+            import kitchen
+            kitchen.remove_scene(self)
             self.done = True
         self.exit_button = BlockButton(on_exit_click, datingsim.COLOR_A, pos=(680,500),
                                         size=(110, 50), text="go back")
@@ -87,6 +90,11 @@ class MeetScene:
             msg = "Wow, I sure will be excited to go to the {} when that feature \
                 is implemented!".format(result.loc_name)
             self.update_conversation(msg)
+            import kitchen
+            date_scene = DateScene(self.gurl,
+                    bg_img=datingsim.locs[result.curr_tile.loc_key].bg_img)
+            kitchen.push_scene(date_scene)
+            self.done = True
         else:
             raise Error("Invalid result {} from gurl.do_date()!".format(result))
     def select_give(self):

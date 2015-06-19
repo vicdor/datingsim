@@ -33,6 +33,11 @@ def push_scene(scene, obliderate_stack=False):
     if obliderate_stack:
         stack = []
     stack.append(scene)
+    print("after push, stack is now " + str(stack))
+
+def empty_scenes():
+    global stack
+    stack = []
 
 def pop_scene(num=1):
     global stack
@@ -42,6 +47,12 @@ def pop_scene(num=1):
         else:
             print("warning: attempted to pop_scene from empty stack")
 
+def remove_scene(scene):
+    global stack
+    stack.remove(scene)
+
+stop_request = False
+in_game_loop = False
 def game_loop():
     datingsim.checkinit()
     global in_game_loop, stop_request, stack, basescene
@@ -49,6 +60,7 @@ def game_loop():
     stop_request = False
 
     while not stop_request:
+        print(stack)
         if len(stack) == 0:
             #TODO: how to open worldmap multiple times
             #TODO: update worldmap to add Scenes to stack rather than directly calling main_loop
@@ -59,6 +71,7 @@ def game_loop():
 
         else:
             next_scene = stack[-1]
+            print("Next scene will be: "+str(next_scene))
             next_scene.done = False
             next_scene.main_loop()
             next_scene.ath()

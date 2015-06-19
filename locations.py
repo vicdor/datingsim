@@ -57,7 +57,7 @@ class BackToMap(BlockButton):
         assert hasattr(BackToMap, 'containers'), 'no containers... DERRRRRRRR HUURRRRRRR'
         B = BackToMap
         def go_back():
-            return True
+            return Location.STATUS_END_SCENE
         BlockButton.__init__(self, on_click or go_back, color, B.size, B.pos,
                                 "Go back!", **style)
 
@@ -92,6 +92,8 @@ class CashHPText(pygame.sprite.Sprite):
 
 class Location():
     WASH_COLOR = (0, 0, 0)
+    STATUS_END_SCENE = 15
+    STATUS_NEXT_SCENE = 16
     _dict = None
 
     def __init__(self, button_data, name=None, bg_img=None):
@@ -156,7 +158,11 @@ class Location():
                             # global variable location and return True
                             # done = button.on_click() or False
                             click_result = button.on_click()
-                            if click_result:
+                            if click_result == Location.STATUS_END_SCENE:
+                                self.done = True
+                                import kitchen
+                                kitchen.remove_scene(self)
+                            elif click_result == Location.STATUS_NEXT_SCENE:
                                 self.done = True
                 all_sprites.update()
                 datingsim.screen.fill(self.WASH_COLOR)
@@ -169,8 +175,9 @@ class Location():
                 pygame.display.flip()
                 pygame.time.wait(1000//20)
     def ath(self):
-        import kitchen
-        kitchen.pop_scene()
+        #import kitchen
+        #kitchen.remove_scene(self)
+        pass
 
     @staticmethod
     def test():
@@ -373,8 +380,9 @@ def build_locs():
         if instance.choice == None:
             return False
         else:
-            MeetScene(instance.choice).main_loop()
-            return False
+            import kitchen
+            kitchen.push_scene(MeetScene(instance.choice))
+            return Location.STATUS_NEXT_SCENE
 
 
     relax_data = ('Relax', initiate_meet, 'lay low for a while')

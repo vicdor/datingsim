@@ -53,6 +53,10 @@ class DateScene(Scene):
         make_menu_button("photo", self.select_photo)
         make_menu_button("kiss", self.select_kiss)
 
+        self.back_button = BlockButton(self.select_back, datingsim.COLOR_D, (110, 50),
+                    (400,300), "Back", self.font)
+
+
         self.quiz_buttons = pygame.sprite.Group()
         quiz_start_pos = (10, 280)
         quiz_size = (280, 70)
@@ -104,6 +108,11 @@ class DateScene(Scene):
         self.show_quiz_buttons = False
         self.show_menu_buttons = True
 
+
+    def select_back(self):
+        import kitchen
+        kitchen.empty_scenes()
+        self.done = True
     def select_talk(self):
         if len(self.remaining_trivia_keys) == 0:
             self.update_conversation("I'm tired of talking...")
@@ -211,6 +220,8 @@ class DateScene(Scene):
             self.buttons.empty()
 
             #self.all_sprites.add(self.gurl_sprite)
+            self.all_sprites.add(self.back_button)
+            self.buttons.add(self.back_button)
 
             if self.show_menu_buttons:
                 self.all_sprites.add(self.menu_buttons)
