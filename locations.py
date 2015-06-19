@@ -145,9 +145,9 @@ class Location():
         while not self.done:
             for event in pygame.event.get():
                 if event.type is pygame.QUIT:
-                    datingsim.quit()
-                    pygame.quit()
-                    quit()
+                    import kitchen
+                    kitchen.finish()
+                    return
                 elif event.type is pygame.MOUSEBUTTONDOWN:
                     for button in buttons:
                         if button.rect.collidepoint(event.pos):
@@ -371,9 +371,10 @@ def build_locs():
         instance = InitiateMeet(gurls, bg_surf)
         instance.main_loop()
         if instance.choice == None:
-            pass
+            return False
         else:
             MeetScene(instance.choice).main_loop()
+            return False
 
 
     relax_data = ('Relax', initiate_meet, 'lay low for a while')
