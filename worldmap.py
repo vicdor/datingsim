@@ -1,4 +1,5 @@
 import pygame, pygame.gfxdraw, pygame.transform
+import kitchen
 from dreambutton import DreamButton, DreamMap
 import datingsim
 
@@ -8,7 +9,11 @@ class MapButton(DreamButton):
             x, y = [int(i) for i in pos]
             rx, ry = [i//2 for i in size]
             pygame.gfxdraw.filled_ellipse(surf, x, y, rx, ry, color)
-        DreamButton.__init__(self, draw, loc.enter)
+        def on_click():
+            import kitchen
+            kitchen.push_scene(loc)
+            return True
+        DreamButton.__init__(self, draw, on_click)
         self.loc = loc
         self.on_hover = lambda: loc.name
 
@@ -60,9 +65,10 @@ class WorldMap():
 
     def main_loop(self):
         self.done = False
-        while not self.done:
+        while not self.done: # and not kitchen.stop_request:
             for e in pygame.event.get():
                 if e.type is pygame.QUIT:
+                    kitchen.finish()
                     self.done = True
                 elif e.type is pygame.MOUSEBUTTONDOWN:
                     dream = self.dream_map.get_at(e.pos)
@@ -74,16 +80,16 @@ class WorldMap():
                     dream = self.dream_map.get_at(e.pos)
                     #print(e.pos, DreamButton.ghost_surf.get_at(pos)[0])
                     if dream:
-                        hover_text = dream.on_hover()
+                        self.hover_text = dream.on_hover()
                     else:
-                        hover_text = None
+                        self.hover_text = None
 
             self.main_surface.blit(self.bg_img, [0,0])
             for b in self.buttons:
                 b.update()
                 b.draw(self.main_surface)
-            if hover_text:
-                center_text(hover_text, self.font, self.font_color, self.name_rect,
+            if self.hover_text:
+                center_text(self.hover_text, self.font, self.font_color, self.name_rect,
                             self.main_surface)
             pygame.time.wait(1000//15)
             pygame.display.flip()

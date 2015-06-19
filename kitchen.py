@@ -9,13 +9,15 @@ def finish():
     global stop_request
     stop_request = True
 
+base_scene = None
 def start():
     """Begin the game."""
     pygame.init()
     datingsim.init()
     datingsim.player.inventory.cash = 1000
     from worldmap import WorldMap
-    push_scene(WorldMap())
+    global base_scene
+    base_scene = WorldMap()
     game_loop()
 
 def snapshot():
@@ -39,18 +41,27 @@ def pop_scene(num=1):
 
 def game_loop():
     datingsim.checkinit()
-    global in_game_loop, stop_request, stack
+    global in_game_loop, stop_request, stack, basescene
     in_game_loop = True
     stop_request = False
 
     try:
-        while not stop_request and not len(stack) == 0:
+        while not stop_request:
             if len(stack) == 0:
                 #TODO: how to open worldmap multiple times
                 #TODO: update worldmap to add Scenes to stack rather than directly calling main_loop
-                pass
+                if base_scene:
+                    base_scene.done = False
+                    base_scene.main_loop()
+                    base_scene.ath()
+
             else:
                 next_scene = stack[-1]
+                next_scene.done = False
                 next_scene.main_loop()
+                next_scene.ath()
     finally:
         in_game_loop = False
+        datingsim.quit()
+        pygame.quit()
+        quit()

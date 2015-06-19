@@ -57,7 +57,7 @@ class BackToMap(BlockButton):
         assert hasattr(BackToMap, 'containers'), 'no containers... DERRRRRRRR HUURRRRRRR'
         B = BackToMap
         def go_back():
-            CoolDialogue('Go back to world map filler.').main_loop()
+            return True
         BlockButton.__init__(self, on_click or go_back, color, B.size, B.pos,
                                 "Go back!", **style)
 
@@ -101,7 +101,7 @@ class Location():
         self.bg_img = bg_img
         self.name = name
 
-    def enter(self):
+    def main_loop(self):
         """The player enters this location in the dating sim"""
         all_sprites = pygame.sprite.Group()
         buttons = pygame.sprite.Group()
@@ -129,10 +129,7 @@ class Location():
         LocButton2(statistics_fn, 'Statistics')
 
         BackToMap.containers = [all_sprites, buttons]
-        def on_click_back():
-            nonlocal done
-            done = True
-        BackToMap(on_click_back)
+        BackToMap()
 
         QuickSleepButton.containers = [all_sprites, buttons]
         QuickSleepButton()
@@ -144,11 +141,13 @@ class Location():
         CashHPText(cash_text_loc)
 
         # okay, and now we loop
-        done = False
-        while not done:
+        self.done = False
+        while not self.done:
             for event in pygame.event.get():
                 if event.type is pygame.QUIT:
-                    done = True
+                    datingsim.quit()
+                    pygame.quit()
+                    quit()
                 elif event.type is pygame.MOUSEBUTTONDOWN:
                     for button in buttons:
                         if button.rect.collidepoint(event.pos):
@@ -156,7 +155,9 @@ class Location():
                             # if location switches, button is expected to change
                             # global variable location and return True
                             # done = button.on_click() or False
-                            button.on_click()
+                            click_result = button.on_click()
+                            if click_result:
+                                self.done = True
                 all_sprites.update()
                 datingsim.screen.fill(self.WASH_COLOR)
                 if self.bg_img:
@@ -167,6 +168,9 @@ class Location():
                 # screen.blit(text_surf, text_loc)
                 pygame.display.flip()
                 pygame.time.wait(1000//20)
+    def ath(self):
+        import kitchen
+        kitchen.pop_scene()
 
     @staticmethod
     def test():
