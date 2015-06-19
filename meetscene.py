@@ -21,7 +21,7 @@ class MeetScene:
 
         self.buttons = pygame.sprite.Group()
         prevx, prevy = None, 300
-        def make_button(name, on_click, size=(110, 50), color=(140,60,60),
+        def make_button(name, on_click, size=(110, 50), color=datingsim.COLOR_A,
                         dx=20):
             nonlocal prevx
             if prevx == None:
@@ -36,6 +36,14 @@ class MeetScene:
         self.add_button = make_button
         if use_default_buttons:
             self.add_default_buttons()
+
+        # make an exit button
+        def on_exit_click():
+            self.done = True
+        self.exit_button = BlockButton(on_exit_click, datingsim.COLOR_A, pos=(680,500),
+                                        size=(110, 50), text="go back")
+        self.buttons.add(self.exit_button)
+        self.all_sprites.add(self.exit_button)
 
         self.done = False;
         self.main_surface = pygame.display.get_surface()

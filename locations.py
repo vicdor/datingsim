@@ -333,7 +333,7 @@ def build_locs():
     def do_drink():
         if not try_expend_hp(20) or not try_expend_cash(20):
             return
-        charm_inc = randint(3,7)
+        charm_inc = random.randint(3,7)
         text = ("Buuuuurp.\n"
                 "Charm increased by {}.\n"
                 ).format(charm_inc)
