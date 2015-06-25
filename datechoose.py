@@ -6,7 +6,7 @@ from dialogue import CoolDialogue
 class DateChoose():
 
     def __init__(self, font_name=None, desc_font_size=25, desc_font_color=(255,255,255),
-                 exit_pos=None, bg_img=None, textbox_pos=(0, 530), textbox_size=(500, 50)
+                 exit_pos=(540,500), bg_img=None, textbox_pos=(0, 530), textbox_size=(500, 50)
                  ):
         """Select from 6 tiled pictures of locations where a date can take place. \
         Displays gold cost under each tile. Deducts gold and initiates dating sequence when \
@@ -44,14 +44,21 @@ class DateChoose():
         make_tile("Arcade", 1000, "TILE_arcade", "arcade")
         make_tile("Hot Springs", 2000, "TILE_springs", "springs")
 
-        # TODO: make a cancel button
+        def on_click():
+            self.done = True
+        self.exit_btn = BlockButton(on_click, datingsim.COLOR_D, (110, 50), exit_pos,
+                            "Back")
 
         self.textbox = TextBox("", textbox_pos, textbox_size, frame_color=(230, 40, 0))
         # TODO: note that frame_color here isn't doing anything.
 
+        self.buttons = pygame.sprite.Group()
+        self.buttons.add(self.exit_btn)
+
         self.all_sprites = pygame.sprite.Group()
         self.all_sprites.add(self.tiles)
         self.all_sprites.add(self.textbox)
+        self.all_sprites.add(self.buttons)
 
         self.main_surface = pygame.display.get_surface()
         self.done = False
@@ -83,6 +90,9 @@ class DateChoose():
                 elif e.type is pygame.MOUSEBUTTONDOWN:
                     if self.curr_tile != None:
                         self.curr_tile.on_click()
+                    for button in self.buttons:
+                        if button.rect.collidepoint(e.pos):
+                            button.on_click()
 
             if self.bg_img:
                 self.main_surface.blit(self.bg_img, [0,0])

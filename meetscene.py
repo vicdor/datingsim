@@ -42,6 +42,7 @@ class MeetScene:
         def on_exit_click():
             import kitchen
             kitchen.remove_scene(self)
+            print("exit click")
             self.done = True
         self.exit_button = BlockButton(on_exit_click, datingsim.COLOR_A, pos=(680,500),
                                         size=(110, 50), text="go back")

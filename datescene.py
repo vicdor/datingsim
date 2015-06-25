@@ -54,7 +54,7 @@ class DateScene(Scene):
         make_menu_button("kiss", self.select_kiss)
 
         self.back_button = BlockButton(self.select_back, datingsim.COLOR_D, (110, 50),
-                    (400,300), "Back", self.font)
+                    (600, 550), "Back", self.font)
 
 
         self.quiz_buttons = pygame.sprite.Group()
