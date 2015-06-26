@@ -8,9 +8,6 @@ COLOR_F = (160, 82, 45)  # sienna
 COLOR_G = (255, 69, 0)  # orange red
 import pygame
 import kitchen
-import locations
-from player import Player
-from assets import Assets
 
 
 inited = False
@@ -27,8 +24,11 @@ def init():
     screen = pygame.display.set_mode(RESOLUTION)
 
     global player, assets, locs
+    from assets import Assets
     assets = Assets()
+    from player import Player
     player = Player()
+    import locations
     locs = locations.build_locs()
 
 
