@@ -12,7 +12,7 @@ from meetscene import MeetScene
 class LocButton(BlockButton):
     i = 0
     b_start_pos = [20, 20]
-    b_w, b_h = 80, 50
+    b_w, b_h = 300, 55
     b_spacing = 10
     def __init__(self, on_click, text, color=(100, 130, 180), **style):
         L = LocButton
@@ -33,7 +33,7 @@ class LocButton2(BlockButton):
     j = 0
     m_spacing = LocButton.b_spacing
     m_start_pos_r = [WIDTH - 160, 20]
-    b2_w, b2_h = 130, 50
+    b2_w, b2_h = 150, 50
 
     def __init__(self, on_click, text, color=(30, 130, 180), **style):
         L2 = LocButton2
@@ -51,7 +51,7 @@ class LocButton2(BlockButton):
 
 class BackToMap(BlockButton):
     pos = (WIDTH - 160, HEIGHT - 70)
-    w, h = size = (130, 50)
+    w, h = size = (160, 50)
 
     def __init__(self, on_click=None, color=(50, 20, 120), **style):
         assert hasattr(BackToMap, 'containers'), 'no containers... DERRRRRRRR HUURRRRRRR'
@@ -63,7 +63,7 @@ class BackToMap(BlockButton):
 
 class QuickSleepButton(BlockButton):
     pos = (20, HEIGHT - 70)
-    w, h = size = (80, 80)
+    w, h = size = (120, 80)
 
     def __init__(self, color=(40, 120, 20), **style):
         Q = QuickSleepButton
