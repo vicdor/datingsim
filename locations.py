@@ -12,7 +12,7 @@ from meetscene import MeetScene
 class LocButton(BlockButton):
     i = 0
     b_start_pos = [20, 20]
-    b_w, b_h = 300, 55
+    b_w, b_h = 160, 55
     b_spacing = 10
     def __init__(self, on_click, text, color=(100, 130, 180), **style):
         L = LocButton
