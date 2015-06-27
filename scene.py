@@ -11,10 +11,12 @@ class Scene():
 
     def main_loop(self):
         while not self.done:
+            self.main_loop_before()
             for e in pygame.event.get():
                 if e.type is pygame.QUIT:
                     datingsim.quit()
                     pygame.quit()
+                    quit()
                 elif e.type is pygame.MOUSEBUTTONDOWN:
                     for button in self.buttons:
                         if button.rect.collidepoint(e.pos):
@@ -26,8 +28,18 @@ class Scene():
             self.all_sprites.update()
             self.all_sprites.draw(self.main_surface)
             pygame.display.flip()
+            self.main_loop_after()
             pygame.time.wait(1000//20)
         self.ath()
+
+    def main_loop_before(self):
+        """Overide this method to add behavior at start of loop."""
+        pass
+
+    def main_loop_after(self):
+        """Overide this method to add behavior at end of loop.
+           Runs after draw and before delay."""
+        pass
 
     def ath(self):
         pass
