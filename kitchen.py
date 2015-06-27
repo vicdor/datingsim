@@ -14,6 +14,14 @@ def start():
     """Begin the game."""
     pygame.init()
     datingsim.init()
+
+    # Show title screen
+    import titlescreen
+    titlescreen.start()
+
+    # TODO: Attribute selection
+    pass
+
     datingsim.player.inventory.cash = 1000
     from worldmap import WorldMap
     global base_scene
